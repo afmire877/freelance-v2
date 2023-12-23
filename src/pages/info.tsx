@@ -58,6 +58,7 @@ export default function Info() {
       <div className="mb-8 ml-4  flex w-[341px] max-w-full flex-col max-md:ml-2.5 ">
         <StyledButton
           onClick={async () => {
+            console.log(getValues());
             setUser(getValues());
             await router.push("/quiz");
           }}

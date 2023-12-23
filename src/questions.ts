@@ -4,49 +4,26 @@ const questionBank: QuestionBank = [
   {
     id: 1,
     topic: Topic.SALES,
+    subTopic: "Pitching",
     questions: [
       {
         type: "scale",
         question:
-          "On a scale of 1 to 5, how well do you handle customer inquiries?",
+          "On a scale of 1 to 5, how confident do you feel pitching my services/products to a client.",
       },
       {
         type: "checklist",
-        prompt: "Select all that apply. When invoicing, I include:",
-        checklist: [
-          { weighting: 6, content: "Account number + sort code" },
-          { weighting: 4, content: "Service description" },
-          { weighting: 4, content: "Timeframe for payment" },
-          { weighting: 4, content: "Invoice Number" },
-          { weighting: 2, content: "Use an invoicing tool" },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    topic: Topic.SALES,
-    questions: [
-      {
-        type: "scale",
-        question:
-          "How confident do you feel pitching your services/products to a client?",
-      },
-      {
-        type: "checklist",
-        prompt: "Select all that apply. When invoicing, I include:",
+        prompt: "Select all that apply. When pitching...",
         checklist: [
           {
-            weighting: 6,
+            weighting: 2,
             content: "I have delivered an elevator pitch for myself",
           },
+          { weighting: 2, content: "I have a deck/demo ready to use" },
+          { weighting: 2, content: "Timeframe for payment" },
+          { weighting: 2, content: "I have a updated CV/portfolio" },
           {
-            weighting: 3,
-            content: "I have a deck ready in preparation to use",
-          },
-          { weighting: 5, content: "I have an up-to-date CV/portfolio" },
-          {
-            weighting: 4,
+            weighting: 2,
             content: "I tailor my pitch according to the specific client",
           },
           {
@@ -58,31 +35,75 @@ const questionBank: QuestionBank = [
     ],
   },
   {
-    id: 3,
-    topic: Topic.PORTFOLIO,
+    id: 2,
+    topic: Topic.SALES,
+    subTopic: "Business Development",
     questions: [
       {
         type: "scale",
-        question:
-          "I feel confident that the portfolio I have built translates my craft, skills or experience",
+        question: "How confident do you feel doing business development?",
       },
       {
         type: "checklist",
         prompt:
-          "I have a digital, publically available platform that articulates what I do",
+          "Select all that apply in relation to your business development.",
         checklist: [
           {
-            weighting: 5,
-            content: "Website",
+            weighting: 3,
+            content: "I engage in developing my business regularly",
           },
           {
-            weighting: 5,
-            content: "Spotify/Mixcloud",
+            weighting: 4,
+            content: "I take a structures approach (e.g. set targets)",
           },
-          { weighting: 5, content: "Vimeo" },
           {
-            weighting: 5,
-            content: "Instagram",
+            weighting: 3,
+            content:
+              "I have a contact list of past clients, leads and future clients",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    topic: Topic.SALES,
+    subTopic: "Negotiation",
+    questions: [
+      {
+        type: "scale",
+        question:
+          "On a scale of 1 to 5, how confident do you feel negotiating with clients?",
+      },
+      {
+        type: "checklist",
+        prompt: "Select all that apply. When negotiating...",
+        checklist: [
+          {
+            weighting: 2,
+            content: "I know what my non-negotiatables are",
+          },
+          {
+            weighting: 2,
+            content: "I have a pricing strategy",
+          },
+          {
+            weighting: 2,
+            content: "I have a negotiation strategy",
+          },
+          {
+            weighting: 2,
+            content: "I understand my workload and capacity",
+          },
+          {
+            weighting: 1,
+            content:
+              "I know how to adapt to different organisation's unique preferences for invoices, timesheets and payment processing",
+          },
+          {
+            weighting: 1,
+            content:
+              "I can confidently handle objections and pushback during negotiations",
           },
         ],
       },
@@ -90,7 +111,8 @@ const questionBank: QuestionBank = [
   },
   {
     id: 4,
-    topic: Topic.PORTFOLIO,
+    topic: Topic.SALES,
+    subTopic: "Closing",
     questions: [
       {
         type: "scale",
@@ -99,68 +121,32 @@ const questionBank: QuestionBank = [
       },
       {
         type: "checklist",
-        prompt:
-          "My portfolio consists of/ I have the following documentation to hand",
+        prompt: "Which of the following best describes your sales:",
+        singleAnswer: true,
         checklist: [
           {
-            weighting: 3,
-            content: "Experience/ Career History",
-          },
-          {
-            weighting: 5,
-            content: "previous work that I can share with a potential client",
-          },
-          {
-            weighting: 4,
+            weighting: 10,
             content:
-              "Previous work in a public location that a potential client could see, and then approach me",
+              "I have a good level of engagement, which translates to sales/paid opportunities",
           },
           {
-            weighting: 2,
-            content: "Biography",
-          },
-          {
-            weighting: 4,
-            content: "Core Skills",
-          },
-          {
-            weighting: 2,
-            content: "Preferred ways of working",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 5,
-    topic: Topic.PORTFOLIO,
-    questions: [
-      {
-        type: "scale",
-        question: "I feel confident asking for feedback from peers or clients",
-      },
-      {
-        type: "checklist",
-        prompt: "How often do you ask for feedback on your portfolio?",
-        checklist: [
-          {
-            weighting: 5,
+            weighting: 7.5,
             content:
-              "I regularly seek feedback on my portfolio, typically after each major project.",
+              "I have a good level of engagement, but this doesn't translate to sales/paid opportunities",
           },
           {
             weighting: 5,
             content:
-              "I ask for feedback on my portfolio occasionally, perhaps once or twice a year.",
+              "I have a small engagment level, but this concerts to a sustainable level of sales/paid opportunities",
           },
           {
-            weighting: 5,
+            weighting: 2.5,
             content:
-              "I rarely seek feedback on my portfolio, only when I make significant changes.",
+              "I have a small engagment level, and this doesn't translate to a sustainable level of sales/paid opportunities",
           },
           {
-            weighting: 5,
-            content: "I have never asked for feedback on my portfolio.",
+            weighting: 0,
+            content: "Not Applicable",
           },
         ],
       },

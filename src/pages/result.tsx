@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
   Filler,
-  Tooltip,
   Legend,
+  LineElement,
+  PointElement,
+  RadialLinearScale,
+  Tooltip,
 } from "chart.js";
+import { useEffect, useState } from "react";
 import { Radar } from "react-chartjs-2";
 import useQuizStore from "~/store/quizStore";
 
-import { sum, groupBy, groupWith } from "ramda";
-import { Topic } from "~/utils/types";
+import { groupWith, sum } from "ramda";
 import SubRadar from "~/components/subRadar";
 import { Button } from "~/components/ui/button";
 
@@ -33,18 +32,29 @@ export default function Result() {
   const [showSecond, setShowSecond] = useState(false);
 
   const calculateResult = () => {
-    // labels: ["SALES", "MARKETING", "FINANCE", "LEGAL", "ADMIN", "PORTFOLIO"],
     const grouped = groupWith((a, b) => a.topic === b.topic, bank);
 
-    console.log("grouped", grouped);
-
-    const res = grouped.map((g) => {
-      const x = g.reduce((acc, cur) => {
+    const result = grouped.map((g) => {
+      console.log(
+        "confidence",
+        g.map((item) => item.questions[0].value),
+      );
+      const confidenceNumber = g.reduce((acc, cur) => {
         const value = cur?.questions?.[0]?.value ?? 0;
         return acc + value;
       }, 0);
 
-      const t = g.reduce((acc, cur) => {
+      console.log(
+        "competence",
+        g.map((item) =>
+          item.questions[1].checklist
+            .filter((c) => c.selected)
+            .map((c) => c.weighting)
+            .flat(),
+        ),
+      );
+
+      const compNumber = g.reduce((acc, cur) => {
         const weighting = cur?.questions[1].checklist
           .filter((c) => c.selected)
           .map((c) => c.weighting);
@@ -53,31 +63,25 @@ export default function Result() {
 
         return acc + count;
       }, 0);
-      console.log("t", t);
+
+      return {
+        topic: g[0].topic,
+        confidence: {
+          score: confidenceNumber,
+          percentage: (confidenceNumber / (g.length * 10)) * 100,
+        },
+        competence: {
+          score: compNumber,
+          percentage: (compNumber / (g.length * 10)) * 100,
+        },
+      };
     });
 
-    const confidenceScore = bank
-      .filter(({ topic }) => topic === Topic.PORTFOLIO)
-      .reduce((acc, cur) => {
-        const value = cur?.questions?.[0]?.value ?? 0;
-        return acc + value;
-      }, 0);
+    console.log("result", result);
 
-    setConfidence(confidenceScore);
+    setConfidence(result[0].confidence.percentage);
 
-    const competenceScore = bank
-      .filter(({ topic }) => topic === Topic.PORTFOLIO)
-      .reduce((acc, cur) => {
-        const weighting = cur?.questions[1].checklist
-          .filter((c) => c.selected)
-          .map((c) => c.weighting);
-
-        const count = sum(weighting);
-
-        return acc + count;
-      }, 0);
-
-    setCompetence(competenceScore);
+    setCompetence(result[0].competence.percentage);
   };
 
   useEffect(() => {
@@ -110,7 +114,7 @@ export default function Result() {
                 datasets: [
                   {
                     label: "Confidence",
-                    data: [40, 0, 0, 0, 0, 90],
+                    data: [confidence, 0, 0, 0, 0, 90],
                     backgroundColor: "rgba(255, 99, 132, 0.2)",
                     borderColor: "rgb(255, 99, 132)",
                     pointBackgroundColor: "rgb(255, 99, 132)",
@@ -120,7 +124,7 @@ export default function Result() {
                   },
                   {
                     label: "Competence",
-                    data: [100, 0, 0, 0, 0, 50],
+                    data: [competence, 0, 0, 0, 0, 50],
                     backgroundColor: "rgba(54, 162, 235, 0.2)",
                     borderColor: "rgb(54, 162, 235)",
                     pointBackgroundColor: "rgb(54, 162, 235)",

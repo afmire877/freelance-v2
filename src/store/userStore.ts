@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { mountStoreDevtool } from "simple-zustand-devtools";
 
 export type User = {
   name: string;
@@ -26,7 +27,19 @@ const useUserStore = create<State>()((set) => ({
     email: "",
     dateOfBirth: "",
   },
-  setUser: (user) => set({ user }),
+  setUser: (user) =>
+    set((prev) => {
+      return {
+        user: {
+          ...prev.user,
+          ...user,
+        },
+      };
+    }),
 }));
+
+if (process.env.NODE_ENV === "development") {
+  mountStoreDevtool("UserStore", useUserStore);
+}
 
 export default useUserStore;

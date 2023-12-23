@@ -1,7 +1,4 @@
-import React from "react";
 import useQuizStore from "~/store/quizStore";
-import Arrow from "../assets/arrow.svg";
-import Image from "next/image";
 
 interface Props {
   question: string;
@@ -34,8 +31,7 @@ export default function ScaleQuestion({ question }: Props) {
             >
               <div className="">
                 <input
-                  // Just to make add up to 20
-                  value={(idx + 1) * 4}
+                  value={(idx + 1) * 2}
                   onChange={(e) => {
                     console.log("e.target.value", e.target.value);
                     updateQuestionValue({

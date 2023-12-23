@@ -2,6 +2,7 @@ import React, { type FormEvent, useState } from "react";
 import {
   type ScaleQuestion as Scale,
   type ChecklistQuestion as Checklist,
+  type TextQuestion,
 } from "~/utils/types";
 import ScaleQuestion from "./ScaleQuestion";
 import ChecklistQuestion from "./ChecklistQuestion";
@@ -9,17 +10,17 @@ import useQuizStore from "~/store/quizStore";
 import { Button } from "./ui/button";
 import questionBank from "~/questions";
 import { useRouter } from "next/router";
+import { Radio } from "@radix-ui/react-radio-group";
+import RadioQuestion from "./RadioQuestion";
 
 type Props = {
-  questions: [Scale, Checklist];
+  questions: [Scale, Checklist, TextQuestion];
 };
 
 export default function Step({ questions }: Props) {
   const currentIndex = useQuizStore((state) => state.currentIndex);
   const setCurrentIndex = useQuizStore((state) => state.setCurrentIndex);
-  const updateQuestionValue = useQuizStore(
-    (state) => state.updateQuestionValue,
-  );
+
   const [step, setStep] = useState(1);
   const router = useRouter();
 
@@ -55,10 +56,19 @@ export default function Step({ questions }: Props) {
         {step === 1 && <ScaleQuestion question={scale.question} />}
 
         {step === 2 && (
-          <ChecklistQuestion
-            prompt={checklist.prompt}
-            checklist={checklist.checklist}
-          />
+          <>
+            {checklist?.singleAnswer ? (
+              <RadioQuestion
+                prompt={checklist.prompt}
+                checklist={checklist.checklist}
+              />
+            ) : (
+              <ChecklistQuestion
+                prompt={checklist.prompt}
+                checklist={checklist.checklist}
+              />
+            )}
+          </>
         )}
       </div>
       <div className=" flex justify-between px-2 py-4">

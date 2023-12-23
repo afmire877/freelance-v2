@@ -21,18 +21,16 @@ export default function ChecklistQuestion({ checklist, prompt }: Props) {
   return (
     <div className="flex flex-col items-start">
       <h1>{prompt}</h1>
+
       {checklist?.map(({ content }, idx) => {
         return (
           <div key={idx} className="items-top mt-4 flex space-x-2">
             <Checkbox
               id={`checklist-${idx}`}
-              onChange={() => {
-                const newValue = value.map((choice, index) => {
-                  if (idx === index) {
-                    return !choice;
-                  }
-                  return choice;
-                });
+              onCheckedChange={() => {
+                const newValue = value.map((choice, index) =>
+                  idx === index ? !choice : choice,
+                );
 
                 setValue(newValue);
 

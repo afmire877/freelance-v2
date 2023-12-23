@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { type QuestionBank, type Question } from "~/utils/types";
 import questionBank from "~/questions";
+import { mountStoreDevtool } from "simple-zustand-devtools";
 
 interface State {
   currentIndex: number;
@@ -32,28 +33,25 @@ const useQuizStore = create<State>()((set) => ({
 
       if (!section) return state;
 
-      const [confidence, competance] = section.questions;
+      const [confidence, competence] = section.questions;
 
-      if (type === "scale") {
-        console.log("value", value);
-        confidence.value = Number(value);
-      }
+      if (type === "scale") confidence.value = Number(value);
+      console.log("value", value, type);
 
       if (type === "checklist") {
-        competance.checklist = competance?.checklist.map((item, index) => {
+        competence.checklist = competence?.checklist.map((item, index) => {
           const selected = (value as boolean[])[index];
 
-          return {
-            ...item,
-            selected,
-          };
+          return { ...item, selected };
         });
       }
-
-      console.log("updatedBank", updatedBank);
 
       return { bank: updatedBank };
     }),
 }));
+
+if (process.env.NODE_ENV === "development") {
+  mountStoreDevtool("QuizStore", useQuizStore);
+}
 
 export default useQuizStore;
