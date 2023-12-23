@@ -84,9 +84,7 @@ export default function Result() {
     setCompetence(result[0].competence.percentage);
   };
 
-  useEffect(() => {
-    calculateResult();
-  }, []);
+  useEffect(() => calculateResult(), []);
 
   return (
     <>

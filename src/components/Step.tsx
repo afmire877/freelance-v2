@@ -14,7 +14,7 @@ import { Radio } from "@radix-ui/react-radio-group";
 import RadioQuestion from "./RadioQuestion";
 
 type Props = {
-  questions: [Scale, Checklist, TextQuestion];
+  questions: [Scale, Checklist, TextQuestion?];
 };
 
 export default function Step({ questions }: Props) {

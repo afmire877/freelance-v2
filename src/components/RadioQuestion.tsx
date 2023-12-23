@@ -24,11 +24,11 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
         className="mt-10"
         defaultValue="option-one"
         onChange={(e) => {
-          const index = Number(e.target?.value);
+          const target = e.target as HTMLInputElement;
+          const index = Number(target?.value);
 
           const newValue = value.map((choice, idx) => {
             return idx === index ? !choice : choice;
-            // return { ...choice, selected: idx === index };
           });
 
           setValue(newValue);
