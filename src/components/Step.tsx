@@ -52,7 +52,7 @@ export default function Step({ questions }: Props) {
 
   return (
     <div className="fle flex h-full flex-col justify-between">
-      <div className="mt-4">
+      <div className="">
         {step === 1 && <ScaleQuestion question={scale.question} />}
 
         {step === 2 && (

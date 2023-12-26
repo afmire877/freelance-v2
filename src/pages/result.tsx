@@ -88,11 +88,15 @@ export default function Result() {
 
   return (
     <>
-      <div className="flex w-[390px] flex-col bg-white pl-4 pr-3.5">
+      <div className="font-inter flex w-[390px] flex-col bg-white pl-4 pr-3.5">
         <div className="mt-16 flex w-full flex-col self-stretch max-md:mt-10">
-          <div className="ml-3.5 max-w-[335px] text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
-            Intro To Freelance Quiz: Results:
+          <div className="ml-3.5 max-w-[335px] whitespace-nowrap pb-2 text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
+            Intro To Freelance Quiz:
           </div>
+          <div className="ml-3.5 max-w-[335px] pb-4 text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
+            Results
+          </div>
+
           {showSecond ? (
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -134,7 +138,7 @@ export default function Result() {
               }}
             />
           )}
-          <div className="mt-6 text-3xl leading-8 text-black">
+          <div className="ml-2 mt-6 text-3xl leading-8 text-black">
             <span className="text-black">Hello </span>
             <span className="text-pink-600">Toyin, </span>
             <span className="text-black">here are your quiz results</span>
