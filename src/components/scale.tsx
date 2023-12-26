@@ -65,7 +65,7 @@ export default function Scale() {
         </div>
         <div className="flex items-start justify-between gap-4 self-stretch">
           <div className="my-auto self-center text-base font-bold text-black">
-            Next{" "}
+            Next
           </div>
           <img
             loading="lazy"

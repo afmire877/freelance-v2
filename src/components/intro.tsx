@@ -37,23 +37,23 @@ export default function Intro() {
         <div className="ml-4 mt-9 self-stretch text-xl leading-7 text-black">
           <ul>
             <li className="list-disc pb-2 ">
-              This quiz is divided into{" "}
+              This quiz is divided into
               <span className="font-bold">6 sections</span> tailored to provide
               insights about your freelancing journey.
             </li>
             <li className="list-disc pb-2">
-              Set aside approximately{" "}
+              Set aside approximately
               <span className="font-bold">30 minutes</span> to complete the
               quiz. This ensures you can thoughtfully answer each question.
             </li>
             <li className="list-disc pb-2">
-              Once you've completed the quiz, you'll receive a{" "}
-              <span className="font-bold">personalised</span>{" "}
+              Once you&apos;ve completed the quiz, you&apos;ll receive a
+              <span className="font-bold">personalised</span>
               <span className="font-bold">report</span> offering suggestions for
               improvement.
             </li>
             <li className="list-disc pb-2">
-              We'll guide you on the next steps, which may include a
+              We&apos;ll guide you on the next steps, which may include a
               consultation <span className="font-bold">1-2-1 </span>
               <span className="font-bold">call</span> with our team
             </li>
