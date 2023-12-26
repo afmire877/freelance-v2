@@ -14,15 +14,15 @@ export default function Info() {
 
   return (
     <div className="flex flex-col bg-white pl-3.5 pr-5">
-      <div className="mt-16 flex w-[356px] max-w-full flex-col max-md:mt-10">
+      <div className="mt-16 flex w-[356px] max-w-full flex-col pb-4 max-md:mt-10">
         <div className="text-3xl font-bold text-black">About Me</div>
-        <div className="mt-10 text-xl text-black">Name</div>
+        <div className="mt-5 text-xl text-black">Name</div>
         <input
           {...register("name", { required: true })}
           className="mt-2.5 w-full border border-solid border-[color:var(--GGH\_navy,#050325)] bg-white py-3.5 pl-2 pr-5 text-sm text-black text-opacity-50"
           placeholder="Type your name here..."
         />
-        <div className="mt-4 text-xl text-black" />
+        <div className="mt-4 text-xl text-black">Date of Birth</div>
         <input
           {...register("dateOfBirth", { required: true })}
           type="date"
@@ -55,16 +55,16 @@ export default function Info() {
           <option value="Waltham Forest">Waltham Forest</option>
         </select>
       </div>
-      <div className="mb-8 ml-4  flex w-[341px] max-w-full flex-col max-md:ml-2.5 ">
+      <div className="mb-2 ml-4  flex w-[331px] max-w-full flex-col max-md:ml-2.5 ">
         <StyledButton
           onClick={async () => {
             console.log(getValues());
             setUser(getValues());
             await router.push("/quiz");
           }}
-          label="continue"
+          label="Continue"
         />
-        <div className="mt-3 flex w-[282px] max-w-full items-start justify-between gap-5 self-center">
+        <div className="mt-1 flex w-[282px] max-w-full items-start justify-between gap-5 self-center">
           <Image
             loading="lazy"
             src={GGH}

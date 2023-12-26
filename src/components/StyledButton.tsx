@@ -20,10 +20,10 @@ export default function StyledButton({ onClick, label }: IStyledButton) {
         loading="lazy"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         src={ArrowButton}
-        className="mb-12 mt-0 aspect-[4.61] w-[341px] max-w-full overflow-hidden object-cover object-center max-md:mb-10"
+        className="mb-2 mt-0 aspect-[4.61] w-[341px] max-w-full overflow-hidden object-cover object-center max-md:mb-10"
         alt=""
       />
-      <div className=" absolute left-[5%] top-[25px] text-white">
+      <div className=" absolute left-[5%] top-[25px] text-lg text-white ">
         <p>{label ?? "Take Quiz"}</p>
       </div>
     </div>
