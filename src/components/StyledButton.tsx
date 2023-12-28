@@ -13,7 +13,7 @@ export default function StyledButton({ onClick, label }: IStyledButton) {
   const router = useRouter();
   return (
     <div
-      className="relative mt-10 cursor-pointer"
+      className="g:w-full lg:abosolute relative mt-5 cursor-pointer lg:inset-y-0 lg:right-0"
       onClick={onClick ?? defaultOnClick}
     >
       <Image
@@ -23,7 +23,7 @@ export default function StyledButton({ onClick, label }: IStyledButton) {
         className="mb-2 mt-0 aspect-[4.61] w-[341px] max-w-full overflow-hidden object-cover object-center max-md:mb-10"
         alt=""
       />
-      <div className=" absolute left-[5%] top-[25px] text-lg text-white ">
+      <div className=" absolute left-[5%] top-[25px] pb-4 text-lg text-white ">
         <p>{label ?? "Take Quiz"}</p>
       </div>
     </div>

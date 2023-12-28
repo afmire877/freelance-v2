@@ -16,15 +16,16 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
   const [value, setValue] = useState<boolean[]>(
     Array(checklist.length).fill(false),
   );
+  console.log("checklist", prompt);
 
   return (
     <div className="font-inter mt-10">
-      <h1 className=" ml-3 w-[306px] break-words  text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 ">
+      <h1 className="   flex  w-[306px] break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full lg:w-full lg:text-5xl">
         {prompt}
       </h1>
 
       <RadioGroup
-        className="mt-6 "
+        className="ml-3.5 mt-10 flex grid max-w-full items-baseline  gap-1.5 gap-5 max-md:ml-2.5 max-md:mt-10 "
         defaultValue="option-one"
         onChange={(e) => {
           const target = e.target as HTMLInputElement;
@@ -49,7 +50,7 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
               <RadioGroupItem defaultChecked={false} value={`${index}`} />
               <Label
                 htmlFor="option-one"
-                className="whitespace-normal text-lg  font-normal leading-normal text-black"
+                className="whitespace-normal  text-lg font-normal leading-normal text-black lg:text-2xl"
               >
                 {content}
               </Label>

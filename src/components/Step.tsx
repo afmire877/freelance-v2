@@ -55,9 +55,9 @@ export default function Step({ questions }: Props) {
   return (
     <div className="fle flex h-full flex-col justify-between">
       <div className="">
-        {step === 1 && <TextBox />}
+        {/* {step === 1 && <TextBox />} */}
         {/* {step === 1 && <ImageCheckbox />} */}
-        {/* {step === 1 && <ScaleQuestion question={scale.question} />} */}
+        {step === 1 && <ScaleQuestion question={scale.question} />}
 
         {step === 2 && (
           <>

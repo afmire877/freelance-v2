@@ -18,12 +18,12 @@ export function ImageCheckbox(props) {
     },
   ];
   return (
-    <div className=" font-inter mt-10">
-      <div className=" text-balance ml-3 w-[306px]  text-3xl font-semibold leading-[112.5%] text-slate-950 max-md:ml-2.5">
+    <div className=" font-inter mt-10 pb-5 md:px-5">
+      <div className="   flex  w-[306px] break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full md:text-4xl lg:w-full lg:text-5xl">
         You are producing a visual arts exhibition for your local museum: A
         retained client, who you have a good relationship with.
       </div>
-      <div className="mt-5 w-[321px] self-center pb-3 text-xl font-light leading-7 text-black">
+      <div className="mt-5 w-[321px]  self-center pb-3 text-xl font-light leading-7 text-black md:w-full">
         The client e-mailed you this, what would you include in your response?
         (Select All That Apply)
       </div>
@@ -31,7 +31,7 @@ export function ImageCheckbox(props) {
       <Image
         src={letter}
         alt="letter"
-        className="mt-2 flex aspect-square flex-col pb-5"
+        className="mt-2 flex aspect-square flex-col pb-5 lg:w-1/4 lg:px-5"
       />
 
       <div className="">
@@ -44,7 +44,7 @@ export function ImageCheckbox(props) {
               <Checkbox id={id} />
               <label
                 htmlFor={id}
-                className="whitespace-normal text-lg  font-normal leading-normal text-black  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-lg font-normal leading-normal text-black peer-disabled:cursor-not-allowed  peer-disabled:opacity-70 lg:overflow-hidden lg:text-clip"
               >
                 {text}
               </label>
