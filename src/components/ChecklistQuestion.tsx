@@ -4,9 +4,10 @@ import { useState } from "react";
 import useQuizStore from "~/store/quizStore";
 import { type Checklist } from "~/utils/types";
 import { Checkbox } from "./ui/checkbox";
+import { type CompetenceChecklist } from "~/model/question";
 
 interface Props {
-  checklist: Checklist[];
+  checklist: CompetenceChecklist[];
   prompt: string;
 }
 
@@ -25,7 +26,7 @@ export default function ChecklistQuestion({ checklist, prompt }: Props) {
         {prompt}
       </h1>
       <div className="mt-6 ">
-        {checklist?.map(({ content }, idx) => {
+        {checklist?.map(({ fields: { text } }, idx) => {
           return (
             <div
               key={idx}
@@ -52,7 +53,7 @@ export default function ChecklistQuestion({ checklist, prompt }: Props) {
                   htmlFor={`checklist-${idx}`}
                   className="whitespace-normal text-lg  font-normal leading-normal text-black  peer-disabled:cursor-not-allowed peer-disabled:opacity-70 lg:text-2xl"
                 >
-                  {content}
+                  {text}
                 </label>
               </div>
             </div>

@@ -9,11 +9,12 @@ import {
 } from "chart.js";
 import { useEffect, useState } from "react";
 import { Radar } from "react-chartjs-2";
-import useQuizStore from "~/store/quizStore";
 
 import { groupWith, sum } from "ramda";
 import SubRadar from "~/components/subRadar";
 import { Button } from "~/components/ui/button";
+import useQuizStore from "~/store/quizStore";
+import { QuestionTypes } from "~/model/question";
 
 ChartJS.register(
   RadialLinearScale,
@@ -25,39 +26,51 @@ ChartJS.register(
 );
 
 export default function Result() {
-  const bank = useQuizStore((e) => e.bank);
+  const bank = useQuizStore((s) => s.bank);
 
   const [confidence, setConfidence] = useState(0);
   const [competence, setCompetence] = useState(0);
   const [showSecond, setShowSecond] = useState(false);
 
   const calculateResult = () => {
-    const grouped = groupWith((a, b) => a.topic === b.topic, bank);
+    if (!bank) return;
+    console.log(bank);
+    const grouped = groupWith((a, b) => {
+      return a.fields.topic === b.fields.topic;
+    }, bank);
+    console.log("g", grouped);
 
     const result = grouped.map((g) => {
-      console.log(
-        "confidence",
-        g.map((item) => item.questions[0].value),
-      );
+      // console.log(
+      //   "confidence",
+      //   g.map((item) => item.questions[0].value),
+      // );
       const confidenceNumber = g.reduce((acc, cur) => {
-        const value = cur?.questions?.[0]?.value ?? 0;
+        const value = cur?.fields.confidenceValue ?? 0;
         return acc + value;
       }, 0);
 
-      console.log(
-        "competence",
-        g.map((item) =>
-          item.questions[1].checklist
-            .filter((c) => c.selected)
-            .map((c) => c.weighting)
-            .flat(),
-        ),
-      );
+      // console.log(
+      //   "competence",
+      //   g.map((item) =>
+      //     item.questions[1].checklist
+      //       .filter((c) => c.selected)
+      //       .map((c) => c.weighting)
+      //       .flat(),
+      //   ),
+      // );
 
       const compNumber = g.reduce((acc, cur) => {
-        const weighting = cur?.questions[1].checklist
-          .filter((c) => c.selected)
-          .map((c) => c.weighting);
+        const found = cur?.fields.questions.find(
+          ({ fields }) => fields?.type === QuestionTypes.COMPETENCE,
+        )?.fields;
+        console.log("found", found);
+
+        if (!found) return acc;
+
+        const weighting = found.competenceChecklist
+          .filter((c) => c.fields.selected)
+          .map((c) => c.fields.weighting);
 
         const count = sum(weighting);
 
@@ -65,7 +78,7 @@ export default function Result() {
       }, 0);
 
       return {
-        topic: g[0].topic,
+        topic: g[0]?.fields.topic,
         confidence: {
           score: confidenceNumber,
           percentage: (confidenceNumber / (g.length * 10)) * 100,
@@ -84,7 +97,7 @@ export default function Result() {
     setCompetence(result[0].competence.percentage);
   };
 
-  useEffect(() => calculateResult(), []);
+  useEffect(() => calculateResult(), [bank]);
 
   return (
     <>
@@ -145,95 +158,28 @@ export default function Result() {
           </div>
           <div className="mt-12 max-w-[335px] self-center text-xl leading-7 text-pink-600 max-md:mt-10">
             <span className="font-bold text-black">Sales: </span>
-            <span className=" text-black">
-              You feel Slightly Confident in this skill. There are some areas we
-              could focus on for growth in this area. You may want to focus on
-              learning how to create a{" "}
-            </span>
-            <span className=" text-pink-600">purchase order</span>
-            <span className=" text-black">
-              {" "}
-              or understanding how to manage your{" "}
-            </span>
-            <span className=" text-pink-600">workload and capacity.</span>
-            <span className=" text-black">
-              {" "}
-              <br />
-              <br />
-            </span>
+
             <span className="font-bold text-black">Marketing: </span>
-            <span className=" text-black">
-              You feel Somewhat Confident in this skill. You also might want to
-              create a network of{" "}
-            </span>
-            <span className=" text-pink-600">potential clients </span>
-            <span className=" text-black">
-              or understanding how to strategise your{" "}
-            </span>
-            <span className=" text-pink-600">
-              marketing goals for next the year
-            </span>
-            <span className=" text-black">
-              .<br />
-            </span>
+
             <span className="font-bold text-black">
               <br />
-              Portfolio:{" "}
+              Portfolio:
             </span>
-            <span className=" text-black">
-              You feel Quite Confident in this skill. There are some areas we
-              could focus on for growth in this area. You may want to create a{" "}
-            </span>
-            <span className=" text-pink-600">digital portfolio</span>
-            <span className=" text-black"> and including having a </span>
-            <span className=" text-pink-600">portfolio review</span>
-            <span className=" text-black">
-              {" "}
-              with someone in your field. <br />
-            </span>
+
             <span className="font-bold text-black">
               <br />
-              Admin:{" "}
+              Admin:
             </span>
-            <span className=" text-black">
-              You feel Slightly Confident in this skill. To help you to grow in
-              this area, you may want to{" "}
-            </span>
-            <span className=" text-pink-600">
-              discuss time management with a coach
-            </span>
-            <span className=" text-black"> and have a conversation about </span>
-            <span className=" text-pink-600">administration tools</span>
-            <span className=" text-black">
-              . <br />
-            </span>
+
             <span className="font-bold text-black">
               <br />
-              Legal:{" "}
+              Legal:
             </span>
-            <span className=" text-black">
-              You feel Not At All Confident in this skill. A coach will give you
-              more tailored advice to enable you to grow in this area. These
-              things might include{" "}
-            </span>
-            <span className=" text-pink-600">access to legal support</span>
-            <span className=" text-black"> and </span>
-            <span className=" text-pink-600">creating contracts</span>
-            <span className=" text-black">
-              .<br />
-            </span>
+
             <span className="font-bold text-black">
               <br />
-              Financial Literacy:{" "}
+              Financial Literacy:
             </span>
-            <span className=" text-black">
-              You feel Somewhat Confident in this skill. To improve your skills
-              in this area, we can help you to create a target{" "}
-            </span>
-            <span className=" text-pink-600">day rate</span>
-            <span className=" text-black"> and </span>
-            <span className=" text-pink-600">access grants</span>
-            <span className=" text-black">. </span>
           </div>
           <Button className="m-4">Click Here for the Full Report</Button>
         </div>

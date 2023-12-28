@@ -1,11 +1,10 @@
 import Head from "next/head";
-import React from "react";
-import { Form } from "~/components/Form";
-import GGH from "../assets/ggh.svg";
-import LocalChamp from "../assets/localChampions.svg";
 import Intro from "~/components/intro";
+import { useQuestions } from "~/hooks/useQuestions";
 
 export default function Home() {
+  const response = useQuestions();
+
   return (
     <>
       <Head>
