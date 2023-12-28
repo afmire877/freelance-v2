@@ -25,10 +25,10 @@ if (typeof window !== "undefined") {
   }
 }
 
-const createClientManagement = createClient({
-  space,
-  accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN ?? "",
-});
+// const createClientManagement = createClient({
+//   space,
+//   accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN ?? "",
+// });
 
 export const getQuestions = async () => {
   const questions = await client?.getEntries({
