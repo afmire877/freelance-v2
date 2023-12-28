@@ -7,12 +7,14 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN: z.string(),
+    CONTENTFUL_ENVIRONMENT: z.string(),
     DATABASE_URL: z
       .string()
       .url()
       .refine(
         (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
-        "You forgot to change the default URL"
+        "You forgot to change the default URL",
       ),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -25,7 +27,9 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_CONTENTFUL_SPACE: z.string(),
+    NEXT_PUBLIC_CONTENTFUL_TOKEN: z.string(),
+    NEXT_PUBLIC_CONTENTFUL_PREVIEW_TOKEN: z.string(),
   },
 
   /**
@@ -35,7 +39,13 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_CONTENTFUL_SPACE: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE,
+    NEXT_PUBLIC_CONTENTFUL_TOKEN: process.env.NEXT_PUBLIC_CONTENTFUL_TOKEN,
+    CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN:
+      process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN,
+    NEXT_PUBLIC_CONTENTFUL_PREVIEW_TOKEN:
+      process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_TOKEN,
+    CONTENTFUL_ENVIRONMENT: process.env.CONTENTFUL_ENVIRONMENT,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -1,11 +1,11 @@
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import React, { useState } from "react";
-import { type Checklist } from "~/utils/types";
 import useQuizStore from "~/store/quizStore";
+import { type CompetenceChecklist } from "~/model/question";
 
 interface Props {
-  checklist: Checklist[];
+  checklist: CompetenceChecklist[];
   prompt: string;
 }
 
@@ -43,7 +43,7 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
           });
         }}
       >
-        {checklist.map(({ content }, index) => {
+        {checklist?.map(({ fields: { text } }, index) => {
           return (
             <div key={index} className=" flex items-baseline space-x-2">
               <RadioGroupItem defaultChecked={false} value={`${index}`} />
@@ -51,7 +51,7 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
                 htmlFor="option-one"
                 className="whitespace-normal text-lg  font-normal leading-normal text-black"
               >
-                {content}
+                {text}
               </Label>
             </div>
           );

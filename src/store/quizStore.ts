@@ -1,12 +1,11 @@
-import { create } from "zustand";
-import { type QuestionBank, type Question } from "~/utils/types";
-import questionBank from "~/questions";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import { create } from "zustand";
+import { QuestionTypes, type QuestionGroup } from "~/model/question";
 
 interface State {
   currentIndex: number;
   setCurrentIndex: (currentIndex: number) => void;
-  bank: QuestionBank;
+  bank: QuestionGroup[];
   updateQuestionValue: ({
     index,
     type,
@@ -17,6 +16,7 @@ interface State {
   }) => void;
 
   questionId: number;
+  setBank: (bank: any[]) => void;
   setQuestionId: (questionId: number) => void;
 }
 
@@ -25,25 +25,40 @@ const useQuizStore = create<State>()((set) => ({
   setCurrentIndex: (currentIndex) => set({ currentIndex }),
   questionId: 1,
   setQuestionId: (questionId: number) => set({ questionId }),
-  bank: questionBank,
+  bank: [],
+  setBank: (bank: any[]) => set({ bank }),
   updateQuestionValue: ({ index, type, value }) =>
     set((state) => {
       const updatedBank = [...state.bank];
-      const section = updatedBank[index];
+      const section = updatedBank?.[index];
 
       if (!section) return state;
 
-      const [confidence, competence] = section.questions;
-
-      if (type === "scale") confidence.value = Number(value);
-      console.log("value", value, type);
+      if (type === "scale") section.fields.confidenceValue = Number(value);
 
       if (type === "checklist") {
-        competence.checklist = competence?.checklist.map((item, index) => {
-          const selected = (value as boolean[])[index];
+        const checklistIndex = section.fields.questions.findIndex(
+          ({ fields }) => fields?.type === QuestionTypes.COMPETENCE,
+        );
 
-          return { ...item, selected };
-        });
+        const checklist =
+          section.fields.questions?.[checklistIndex]?.fields
+            .competenceChecklist;
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        section.fields.questions[checklistIndex].fields.competenceChecklist =
+          checklist?.map((item, index) => {
+            const selected = (value as boolean[])[index];
+
+            return {
+              ...item,
+              fields: {
+                ...item.fields,
+                selected,
+              },
+            };
+          });
       }
 
       return { bank: updatedBank };
