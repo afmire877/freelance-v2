@@ -20,6 +20,8 @@ export default function Step() {
   if (!bank?.[currentIndex]) return null;
 
   const {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     fields: { confidenceQuestion, questions },
   } = bank?.[currentIndex];
 

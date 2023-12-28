@@ -7,7 +7,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN: z.string(),
+    CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN: z.string().optional(),
     CONTENTFUL_ENVIRONMENT: z.string(),
     DATABASE_URL: z
       .string()

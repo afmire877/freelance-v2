@@ -16,7 +16,7 @@ interface State {
   }) => void;
 
   questionId: number;
-  setBank: (bank: any[]) => void;
+  setBank: (bank: QuestionGroup[]) => void;
   setQuestionId: (questionId: number) => void;
 }
 
@@ -26,14 +26,15 @@ const useQuizStore = create<State>()((set) => ({
   questionId: 1,
   setQuestionId: (questionId: number) => set({ questionId }),
   bank: [],
-  setBank: (bank: any[]) => set({ bank }),
+  setBank: (bank: QuestionGroup[]) => set({ bank }),
   updateQuestionValue: ({ index, type, value }) =>
     set((state) => {
       const updatedBank = [...state.bank];
       const section = updatedBank?.[index];
 
       if (!section) return state;
-
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       if (type === "scale") section.fields.confidenceValue = Number(value);
 
       if (type === "checklist") {

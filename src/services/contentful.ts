@@ -1,5 +1,4 @@
 import { type ContentfulClientApi, createClient } from "contentful";
-import { createClient as createClientManagement } from "contentful-management";
 
 import { type QuestionGroup } from "~/model/question";
 
@@ -26,12 +25,10 @@ if (typeof window !== "undefined") {
   }
 }
 
-
 const createClientManagement = createClient({
   space,
   accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN ?? "",
 });
-
 
 export const getQuestions = async () => {
   const questions = await client?.getEntries({
@@ -44,10 +41,10 @@ export const getQuestions = async () => {
   return questions.items as unknown as QuestionGroup[];
 };
 
-export const saveSubmission = async () => {
-  const questions = await client?.
+// export const saveSubmission = async () => {
+//   const questions = await client?.
 
-  if (questions === undefined) throw new Error("Questions not found");
+//   if (questions === undefined) throw new Error("Questions not found");
 
-  return questions.items as unknown as QuestionGroup[];
-};
+//   return questions.items as unknown as QuestionGroup[];
+// };
