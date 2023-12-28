@@ -57,8 +57,10 @@ export default function Step() {
       <div className="">
         {/* {step === 1 && <TextBox />} */}
         {/* {step === 1 && <ImageCheckbox />} */}
+
         {/* {step === 1 && <ScaleQuestion question={scale.question} />} */}
         {step === 1 && <ScaleQuestion question={confidenceQuestion} />}
+
 
         {step === 2 && (
           <>

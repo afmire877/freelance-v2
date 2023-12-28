@@ -16,18 +16,18 @@ export default function ScaleQuestion({ question }: Props) {
     "Slightly Confident",
     "Not at all Confident",
   ].reverse();
-
+  console.log("scale");
   return (
     <div className="font-inter flex flex-col bg-white ">
-      <div className="mt-10 flex w-[306px] max-w-full flex-col  ">
-        <div className=" ml-3 w-[306px] break-words  text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 ">
+      <div className="mt-10 flex w-[306px] max-w-full flex-col md:w-full md:px-2 lg:w-full  ">
+        <div className="flex  w-[306px] break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full md:text-4xl lg:w-full lg:text-5xl">
           {question}
         </div>
         {scale.map((content, idx) => {
           return (
             <div
               key={idx}
-              className=" ml-3.5 mt-20 flex w-[154px] max-w-full items-baseline gap-5  max-md:ml-2.5 max-md:mt-10"
+              className=" ml-3.5 mt-10 flex max-w-full items-baseline gap-5  max-md:ml-2.5 max-md:mt-10"
             >
               <div className="">
                 <input
@@ -48,7 +48,7 @@ export default function ScaleQuestion({ question }: Props) {
 
               <label
                 htmlFor={`scale-${idx}`}
-                className="mt-1 whitespace-nowrap  text-lg leading-normal text-black "
+                className="mt-1 whitespace-nowrap  text-lg leading-normal text-black lg:text-2xl "
               >
                 {content}
               </label>
