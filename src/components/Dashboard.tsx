@@ -72,8 +72,8 @@ export const Dashboard = () => {
               Portfolio: <span>8</span>
             </AccordionTrigger>
             <AccordionContent>
-              Yes. It&apos;s animated by default, but you can disable it if you
-              prefer.
+              Yes. It&apos;pens animated by default, but you can disable it if
+              you prefer.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-4">
@@ -90,8 +90,8 @@ export const Dashboard = () => {
               Legal: <span>8</span>
             </AccordionTrigger>
             <AccordionContent>
-              Yes. It&apos;s animated by default, but you can disable it if you
-              prefer.
+              Yes. It&apos;pens animated by default, but you can disable it if
+              you prefer.
             </AccordionContent>
           </AccordionItem>
 
@@ -100,8 +100,8 @@ export const Dashboard = () => {
               Financial Literacy: <span>8</span>
             </AccordionTrigger>
             <AccordionContent>
-              Yes. It&apos;s animated by default, but you can disable it if you
-              prefer.
+              Yes. It&apos;pens animated by default, but you can disable it if
+              you prefer.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
