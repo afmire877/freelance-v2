@@ -12,6 +12,8 @@ import questionBank from "~/questions";
 import { useRouter } from "next/router";
 import { Radio } from "@radix-ui/react-radio-group";
 import RadioQuestion from "./RadioQuestion";
+import { TextBox } from "./TextBox";
+import { ImageCheckbox } from "./ImageCheckbox";
 
 type Props = {
   questions: [Scale, Checklist, TextQuestion?];
@@ -49,11 +51,13 @@ export default function Step({ questions }: Props) {
 
     setCurrentIndex(currentIndex + 1);
   };
-
+  console.log(step);
   return (
     <div className="fle flex h-full flex-col justify-between">
       <div className="">
-        {step === 1 && <ScaleQuestion question={scale.question} />}
+        {step === 1 && <TextBox />}
+        {/* {step === 1 && <ImageCheckbox />} */}
+        {/* {step === 1 && <ScaleQuestion question={scale.question} />} */}
 
         {step === 2 && (
           <>
