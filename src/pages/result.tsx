@@ -25,6 +25,18 @@ ChartJS.register(
   Legend,
 );
 
+type Result = {
+  topic: string;
+  confidence: {
+    score: number;
+    percentage: number;
+  };
+  competence: {
+    score: number;
+    percentage: number;
+  };
+};
+
 export default function Result() {
   const bank = useQuizStore((s) => s.bank);
 
@@ -40,7 +52,7 @@ export default function Result() {
     }, bank);
     console.log("g", grouped);
 
-    const result = grouped.map((g) => {
+    const result: Result[] = grouped.map((g) => {
       // console.log(
       //   "confidence",
       //   g.map((item) => item.questions[0].value),
@@ -92,16 +104,16 @@ export default function Result() {
 
     console.log("result", result);
 
-    setConfidence(result[0].confidence.percentage);
+    setConfidence(result[0]?.confidence.percentage ?? 0);
 
-    setCompetence(result[0].competence.percentage);
+    setCompetence(result[0]?.competence.percentage ?? 0);
   };
 
   useEffect(() => calculateResult(), [bank]);
 
   return (
     <>
-      <div className="font-inter flex w-[390px] flex-col bg-white pl-4 pr-3.5">
+      <div className="flex w-[390px] flex-col bg-white pl-4 pr-3.5 font-inter">
         <div className="mt-16 flex w-full flex-col self-stretch max-md:mt-10">
           <div className="ml-3.5 max-w-[335px] whitespace-nowrap pb-2 text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
             Intro To Freelance Quiz:

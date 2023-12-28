@@ -21,6 +21,7 @@ export interface Question {
     question: string;
     type: QuestionTypes;
     competenceChecklist?: CompetenceChecklist[];
+    singleAnswer?: boolean;
   };
 }
 

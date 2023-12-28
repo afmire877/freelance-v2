@@ -62,7 +62,7 @@ export default function Step() {
 
         {step === 2 && (
           <>
-            {checklist.singleAnswer ? (
+            {checklist?.singleAnswer ? (
               <RadioQuestion
                 prompt={checklist.question}
                 checklist={checklist.competenceChecklist}

@@ -19,6 +19,7 @@ const config = {
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
 
     "@typescript-eslint/consistent-type-imports": [
       "warn",
