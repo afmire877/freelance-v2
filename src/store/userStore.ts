@@ -6,6 +6,10 @@ export type User = {
   email: string;
   contactNumber: string;
   dateOfBirth: string;
+  revenue: string;
+  desiredRevenue: string;
+  marketingConsent: boolean;
+  isFreelancer: boolean;
   borough:
     | "Hackney"
     | "Newham"
@@ -26,6 +30,10 @@ const useUserStore = create<State>()((set) => ({
     contactNumber: "",
     email: "",
     dateOfBirth: "",
+    revenue: "",
+    desiredRevenue: "",
+    marketingConsent: false,
+    isFreelancer: false,
   },
   setUser: (user) =>
     set((prev) => {

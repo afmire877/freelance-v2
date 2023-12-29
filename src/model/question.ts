@@ -22,6 +22,7 @@ export interface Question {
     type: QuestionTypes;
     competenceChecklist?: CompetenceChecklist[];
     singleAnswer?: boolean;
+    choiceQuestion?: string;
   };
 }
 

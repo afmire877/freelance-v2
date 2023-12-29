@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -30,20 +31,15 @@ export const submissionRouter = createTRPCRouter({
     const [found] = await db
       .select()
       .from(profiles)
-      .where({ email: input?.user.email })
+      .where(eq(profiles.email, String(input?.user?.email) ?? ""))
       .execute();
+
+    console.log(found);
 
     if (!found) {
       const [profile] = await db
         .insert(profiles)
-        .values({
-          name: input?.user.name,
-          contactNumber: input?.user.contactNumber,
-          dateOfBirth: input?.user.dateOfBirth,
-          borough: input?.user.borough,
-          email: input?.user.email,
-          submittableId: input?.user.submittableId,
-        })
+        .values(input?.user)
         .returning()
         .execute();
       values.profileId = profile?.id;
@@ -56,4 +52,15 @@ export const submissionRouter = createTRPCRouter({
 
     return "ok";
   }),
+  get: publicProcedure
+    .input(z.object({ uuid: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const [found] = await db
+        .select()
+        .from(submissions)
+        .where(eq(submissions.uuid, String(input?.uuid) ?? ""))
+        .execute();
+
+      return found;
+    }),
 });

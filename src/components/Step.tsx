@@ -1,16 +1,15 @@
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, type FormEvent } from "react";
 import { QuestionTypes } from "~/model/question";
 import useQuizStore from "~/store/quizStore";
+import ArrowLeft from "../assets/arrow-left.svg";
+import ArrowRight from "../assets/arrow-right.svg";
 import ChecklistQuestion from "./ChecklistQuestion";
 import RadioQuestion from "./RadioQuestion";
-import { TextBox } from "./TextBox";
-import { ImageCheckbox } from "./ImageCheckbox";
 import ScaleQuestion from "./ScaleQuestion";
-import { Button } from "./ui/button";
-import ArrowLeft from "../assets/arrow-left.svg";
-import Image from "next/image";
-import ArrowRight from "../assets/arrow-right.svg";
+import { TextBox } from "./TextBox";
+
 export default function Step() {
   const currentIndex = useQuizStore((state) => state.currentIndex);
   const setCurrentIndex = useQuizStore((state) => state.setCurrentIndex);
@@ -35,9 +34,8 @@ export default function Step() {
     e?.preventDefault();
     const isLastQuestion = currentIndex === bank?.length - 1;
 
-    if (step === 1) {
-      return setStep(2);
-    }
+    if (step === 1) return setStep(2);
+    // if (step === 2) return setStep(3);
 
     if (step === 2 && isLastQuestion) {
       await router.push("/result");
@@ -63,6 +61,36 @@ export default function Step() {
         {/* {step === 1 && <ScaleQuestion question={scale.question} />} */}
         {step === 1 && <ScaleQuestion question={confidenceQuestion} />}
 
+        {/* {step === 2 && (
+          <>
+            {questions.map((q, idx) => {
+              const type = q.fields.type;
+
+              if (type === QuestionTypes.COMPETENCE) {
+                return (
+                  <>
+                    {checklist?.singleAnswer ? (
+                      <RadioQuestion
+                        prompt={checklist.question}
+                        checklist={checklist.competenceChecklist}
+                      />
+                    ) : (
+                      <ChecklistQuestion
+                        prompt={checklist.question}
+                        checklist={checklist.competenceChecklist}
+                      />
+                    )}
+                  </>
+                );
+              }
+
+              if (type === QuestionTypes.CHOICE) {
+                return <TextBox key={idx} />;
+              }
+            })}
+          </>
+        )} */}
+
         {step === 2 && (
           <>
             {checklist?.singleAnswer ? (
@@ -79,7 +107,7 @@ export default function Step() {
           </>
         )}
 
-        {step === 3 && <div></div>}
+        {step === 3 && <TextBox />}
       </div>
       <div className=" flex justify-between px-2 py-4">
         <div

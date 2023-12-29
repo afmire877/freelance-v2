@@ -7,6 +7,7 @@ import {
   serial,
   timestamp,
   varchar,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { type Result } from "postcss";
 
@@ -14,6 +15,10 @@ export const pgTable = pgTableCreator((name) => `freelance-v2_${name}`);
 
 export const submissions = pgTable("submission", {
   id: serial("id").primaryKey(),
+  uuid: varchar("uuid", { length: 256 })
+    .unique()
+    .notNull()
+    .default(sql`uuid_generate_v4()`),
   answers: json("answers").default([]),
   profileId: integer("profileId").references(() => profiles.id, {
     onDelete: "cascade",
@@ -53,6 +58,9 @@ export const profiles = pgTable("profiles", {
   dateOfBirth: varchar("dateOfBirth"),
   borough: varchar("borough").default("Hackney"),
   email: varchar("email", { length: 256 }).unique().notNull(),
+  revenue: varchar("revenue", { length: 256 }),
+  desiredRevenue: varchar("desiredRevenue", { length: 256 }),
+  marketingConsent: boolean("marketingConsent").default(false),
   submittableId: varchar("submittableId").unique(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)

@@ -7,7 +7,7 @@ import { type QuestionGroup } from "~/model/question";
 
 const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE ?? "";
 
-const isProd = process.env.NEXT_PUBLIC_APP_ENV === "prod";
+const isProd = process.env.NODE_ENV === "production";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let client: ContentfulClientApi<any>;
@@ -43,36 +43,3 @@ export const getQuestions = async () => {
 
   return questions.items as unknown as QuestionGroup[];
 };
-
-// export const saveSubmission = async (
-//   result: Result[],
-//   answers: QuestionGroup[],
-// ) => {
-//   const partialSubmission = result
-//     .map((item) => {
-//       return {
-//         [`${item.topic.toLowerCase()}Percentage`]: item.competence.percentage,
-//       };
-//     })
-//     .reduce((acc, item) => {
-//       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//       //@ts-expect-error
-//       const [key, value] = Object.entries(item)[0];
-//       acc[key] = value;
-
-//       return acc;
-//     }, {});
-
-//   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//   //@ts-ignore
-//   const questions = await db
-//     .insert(submissions)
-//     .values({
-//       answers: JSON.stringify(answers),
-//       score: JSON.stringify(result),
-//       ...partialSubmission,
-//     })
-//     .execute();
-
-//   return questions;
-// };

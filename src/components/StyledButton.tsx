@@ -2,19 +2,24 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import ArrowButton from "../assets/button.svg";
-interface IStyledButton {
+interface IStyledButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   onClick?: () => void;
 }
 
-export default function StyledButton({ onClick, label }: IStyledButton) {
+export default function StyledButton({
+  onClick,
+  label,
+  ...props
+}: IStyledButton) {
   const defaultOnClick = () => router.push("/quiz");
 
   const router = useRouter();
   return (
-    <div
+    <button
       className="g:w-full lg:abosolute relative mt-5 cursor-pointer lg:inset-y-0 lg:right-0"
       onClick={onClick ?? defaultOnClick}
+      {...props}
     >
       <Image
         loading="lazy"
@@ -26,6 +31,6 @@ export default function StyledButton({ onClick, label }: IStyledButton) {
       <div className=" absolute left-[5%] top-[25px] pb-4 text-lg text-white ">
         <p>{label ?? "Take Quiz"}</p>
       </div>
-    </div>
+    </button>
   );
 }
