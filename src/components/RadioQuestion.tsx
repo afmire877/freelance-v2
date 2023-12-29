@@ -49,7 +49,7 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
               <RadioGroupItem defaultChecked={false} value={`${index}`} />
               <Label
                 htmlFor="option-one"
-                className="whitespace-normal  text-lg font-normal leading-normal text-black lg:text-2xl"
+                className="whitespace-normal  text-lg font-normal leading-normal text-black hover:border-b-2 hover:border-pink-600 lg:text-2xl"
               >
                 {text}
               </Label>

@@ -10,7 +10,7 @@ export default function Intro() {
   const router = useRouter();
   return (
     <div className="mx-auto max-w-md overflow-hidden  md:max-w-full">
-      <div className="md:my-10lg:text-5xl self-center whitespace-nowrap p-4 text-3xl  font-medium  text-black md:mx-6 md:pt-12 ">
+      <div className="self-center whitespace-nowrap p-4 text-3xl font-medium text-black  md:mx-6  md:my-10 md:pt-12 lg:text-5xl ">
         Intro to Freelance Quiz{" "}
       </div>
       <div className="md:flex">

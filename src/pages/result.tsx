@@ -7,6 +7,12 @@ import {
   RadialLinearScale,
   Tooltip,
 } from "chart.js";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../components/ui/accordion";
 import { useEffect, useState } from "react";
 import { Radar } from "react-chartjs-2";
 
@@ -15,8 +21,11 @@ import SubRadar from "~/components/subRadar";
 import { Button } from "~/components/ui/button";
 import useQuizStore from "~/store/quizStore";
 import { QuestionTypes } from "~/model/question";
-import { api } from "~/utils/api";
-import useUserStore from "~/store/userStore";
+import Image from "next/image";
+<<<<<<< Updated upstream
+import { mockdata } from "~/components/mockdata";
+=======
+>>>>>>> Stashed changes
 
 ChartJS.register(
   RadialLinearScale,
@@ -27,7 +36,7 @@ ChartJS.register(
   Legend,
 );
 
-export type Result = {
+type Result = {
   topic: string;
   confidence: {
     score: number;
@@ -41,8 +50,6 @@ export type Result = {
 
 export default function Result() {
   const bank = useQuizStore((s) => s.bank);
-  const user = useUserStore((s) => s.user);
-  const mutation = api.submission.create.useMutation();
 
   const [confidence, setConfidence] = useState(0);
   const [competence, setCompetence] = useState(0);
@@ -50,20 +57,37 @@ export default function Result() {
 
   const calculateResult = () => {
     if (!bank) return;
+    console.log(bank);
     const grouped = groupWith((a, b) => {
       return a.fields.topic === b.fields.topic;
     }, bank);
+    console.log("g", grouped);
 
     const result: Result[] = grouped.map((g) => {
+      // console.log(
+      //   "confidence",
+      //   g.map((item) => item.questions[0].value),
+      // );
       const confidenceNumber = g.reduce((acc, cur) => {
         const value = cur?.fields.confidenceValue ?? 0;
         return acc + value;
       }, 0);
 
+      // console.log(
+      //   "competence",
+      //   g.map((item) =>
+      //     item.questions[1].checklist
+      //       .filter((c) => c.selected)
+      //       .map((c) => c.weighting)
+      //       .flat(),
+      //   ),
+      // );
+
       const compNumber = g.reduce((acc, cur) => {
         const found = cur?.fields.questions.find(
           ({ fields }) => fields?.type === QuestionTypes.COMPETENCE,
         )?.fields;
+        console.log("found", found);
 
         if (!found) return acc;
 
@@ -91,31 +115,35 @@ export default function Result() {
 
     console.log("result", result);
 
-    mutation.mutate({ result, answers: bank, user });
     setConfidence(result[0]?.confidence.percentage ?? 0);
 
     setCompetence(result[0]?.competence.percentage ?? 0);
   };
 
   useEffect(() => calculateResult(), [bank]);
+  console.log("mock", mockdata[0]?.fields);
 
   return (
-    <>
-      <div className="flex w-[390px] flex-col bg-white pl-4 pr-3.5 font-inter">
-        <div className="mt-16 flex w-full flex-col self-stretch max-md:mt-10">
-          <div className="ml-3.5 max-w-[335px] whitespace-nowrap pb-2 text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
-            Intro To Freelance Quiz:
-          </div>
-          <div className="ml-3.5 max-w-[335px] pb-4 text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
-            Results
-          </div>
-
+    <div className="font-inter mx-auto max-w-md  overflow-hidden md:max-w-full">
+      <div className="self-center whitespace-nowrap p-4 text-3xl font-medium text-black  md:mx-6  md:my-10 md:pt-12 lg:text-5xl ">
+        Intro to Freelance Quiz{" "}
+      </div>
+<<<<<<< Updated upstream
+=======
+      <div className="self-center whitespace-nowrap p-4 text-3xl font-medium text-black  md:mx-6  md:my-2  lg:text-4xl">
+        {" "}
+        Results:
+      </div>
+>>>>>>> Stashed changes
+      <div className="md:flex">
+        <div className="flex flex-col md:mx-10 md:shrink-0 md:py-20">
           {showSecond ? (
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             <SubRadar onClick={() => setShowSecond(!showSecond)} />
           ) : (
             <Radar
+              className="lg:mx-20 lg:w-[700px]"
               onClick={() => setShowSecond(!showSecond)}
               data={{
                 labels: [
@@ -151,39 +179,469 @@ export default function Result() {
               }}
             />
           )}
-          <div className="ml-2 mt-6 text-3xl leading-8 text-black">
+        </div>
+        <div className="p-8 ">
+          <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
             <span className="text-black">Hello </span>
             <span className="text-pink-600">Toyin, </span>
-            <span className="text-black">here are your quiz results</span>
-          </div>
-          <div className="mt-12 max-w-[335px] self-center text-xl leading-7 text-pink-600 max-md:mt-10">
-            <span className="font-bold text-black">Sales: </span>
-
-            <span className="font-bold text-black">Marketing: </span>
-
-            <span className="font-bold text-black">
-              <br />
-              Portfolio:
-            </span>
-
-            <span className="font-bold text-black">
-              <br />
-              Admin:
-            </span>
-
-            <span className="font-bold text-black">
-              <br />
-              Legal:
-            </span>
-
-            <span className="font-bold text-black">
-              <br />
-              Financial Literacy:
+<<<<<<< Updated upstream
+            <span className="text-black">
+              here are your quiz results and answers:
             </span>
           </div>
-          <Button className="m-4">Click Here for the Full Report</Button>
+          <Accordion
+            type="single"
+            collapsible
+            className=" w-full lg:w-[1000px]  "
+          >
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="md:4xl text-2xl font-medium">
+                Sales
+              </AccordionTrigger>
+              <AccordionContent className="tr w-3/4  text-xl">
+                {mockdata?.map((item, idx) => {
+                  console.log("t", item);
+                  return (
+                    <div>
+                      <div className="py-2 text-pink-400 ">
+                        {item.fields.confidenceQuestion}
+                      </div>
+                      <div className="">
+                        Score: {item.fields.confidenceValue}
+                      </div>
+
+                      <div>
+                        {item.fields.questions.map((q, idxs) => {
+                          return (
+                            <div>
+                              <ul className=" py-2 text-pink-400">
+                                <li>{q.fields.question}</li>
+                                <li className="py-2 text-black ">
+                                  {q.fields.text}
+                                </li>
+                              </ul>
+                              {q.fields.competenceChecklist
+                                ?.filter((obj) => Boolean(obj.fields.selected))
+                                .map((obj) => {
+                                  console.log("iss", obj);
+                                  return (
+                                    <div>
+                                      <ul className="list-inside list-disc text-black md:ml-3">
+                                        <li>{obj.fields.text}</li>
+                                      </ul>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+=======
+            <span className="text-black">here are your quiz results:</span>
+          </div>
+          <Accordion type="single" collapsible className=" max-w-full  ">
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-xl font-medium">
+                Sales
+              </AccordionTrigger>
+              <AccordionContent className="w-3/4  text-lg">
+                You feel{" "}
+                <span className="text-pink-600">Slightly Confident </span> in
+                this skill. There are some areas we could focus on for growth in
+                this area. You may want to focus on learning how to create a
+                purchase order or understanding how to manage your workload and
+                capacity. Marketing: You feel Somewhat Confident in this skill.
+                You also might want to create a network of potential clients or
+                understanding how to strategise your marketing goals for next
+                the year. Portfolio: You feel Quite Confident in this skill.
+                There are some areas we could focus on for growth in this area.
+                You may want to create a digital portfolio and including having
+                a portfolio review with someone in your field. Admin: You feel
+                Slightly Confident in this skill. To help you to grow in this
+                area, you may want to discuss time management with a coach and
+                have a conversation about administration tools. Legal: You feel
+                Not At All Confident in this skill. A coach will give you more
+                tailored advice to enable you to grow in this area. These things
+                might include access to legal support and creating contracts.
+                Financial Literacy: You feel Somewhat Confident in this skill.
+                To improve your skills in this area, we can help you to create a
+                target day rate and access grants.
+>>>>>>> Stashed changes
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-xl font-medium">
+                Marketing
+              </AccordionTrigger>
+              <AccordionContent className="w-3/4 text-lg">
+<<<<<<< Updated upstream
+                {mockdata?.map((item, idx) => {
+                  console.log("t", item);
+                  return (
+                    <div>
+                      <div className="py-2 text-pink-400 ">
+                        {item.fields.confidenceQuestion}
+                      </div>
+                      <div className="">
+                        Score: {item.fields.confidenceValue}
+                      </div>
+
+                      <div>
+                        {item.fields.questions.map((q, idxs) => {
+                          return (
+                            <div>
+                              <ul className=" py-2 text-pink-400">
+                                <li>{q.fields.question}</li>
+                                <li className="py-2 text-black ">
+                                  {q.fields.text}
+                                </li>
+                              </ul>
+                              {q.fields.competenceChecklist
+                                ?.filter((obj) => Boolean(obj.fields.selected))
+                                .map((obj) => {
+                                  console.log("iss", obj);
+                                  return (
+                                    <div>
+                                      <ul className="list-inside list-disc text-black md:ml-3">
+                                        <li>{obj.fields.text}</li>
+                                      </ul>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+=======
+                You feel{" "}
+                <span className="text-pink-600"> Somewhat Confident </span> in
+                this skill. You also might want to create a network of potential
+                clients or understanding how to strategise your marketing goals
+                for next the year.
+>>>>>>> Stashed changes
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="text-xl font-medium">
+                Portfolio
+              </AccordionTrigger>
+              <AccordionContent className="w-3/4 text-lg">
+<<<<<<< Updated upstream
+                {mockdata?.map((item, idx) => {
+                  console.log("t", item);
+                  return (
+                    <div>
+                      <div className="py-2 text-pink-400 ">
+                        {item.fields.confidenceQuestion}
+                      </div>
+                      <div className="">
+                        Score: {item.fields.confidenceValue}
+                      </div>
+
+                      <div>
+                        {item.fields.questions.map((q, idxs) => {
+                          return (
+                            <div>
+                              <ul className=" py-2 text-pink-400">
+                                <li>{q.fields.question}</li>
+                                <li className="py-2 text-black ">
+                                  {q.fields.text}
+                                </li>
+                              </ul>
+                              {q.fields.competenceChecklist
+                                ?.filter((obj) => Boolean(obj.fields.selected))
+                                .map((obj) => {
+                                  console.log("iss", obj);
+                                  return (
+                                    <div>
+                                      <ul className="list-inside list-disc text-black md:ml-3">
+                                        <li>{obj.fields.text}</li>
+                                      </ul>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+=======
+                You feel <span className="text-pink-600"> Quite Confident</span>{" "}
+                Quite Confident in this skill. There are some areas we could
+                focus on for growth in this area. You may want to create a
+                digital portfolio and including having a portfolio review with
+                someone in your field.
+>>>>>>> Stashed changes
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger className="text-xl font-medium">
+                Admin
+              </AccordionTrigger>
+              <AccordionContent className="w-3/4 text-lg">
+<<<<<<< Updated upstream
+                {mockdata?.map((item, idx) => {
+                  console.log("t", item);
+                  return (
+                    <div>
+                      <div className="py-2 text-pink-400 ">
+                        {item.fields.confidenceQuestion}
+                      </div>
+                      <div className="">
+                        Score: {item.fields.confidenceValue}
+                      </div>
+
+                      <div>
+                        {item.fields.questions.map((q, idxs) => {
+                          return (
+                            <div>
+                              <ul className=" py-2 text-pink-400">
+                                <li>{q.fields.question}</li>
+                                <li className="py-2 text-black ">
+                                  {q.fields.text}
+                                </li>
+                              </ul>
+                              {q.fields.competenceChecklist
+                                ?.filter((obj) => Boolean(obj.fields.selected))
+                                .map((obj) => {
+                                  console.log("iss", obj);
+                                  return (
+                                    <div>
+                                      <ul className="list-inside list-disc text-black md:ml-3">
+                                        <li>{obj.fields.text}</li>
+                                      </ul>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+=======
+                You feel
+                <span className="text-pink-600"> Slightly Confident</span> in
+                this skill. To help you to grow in this area, you may want to
+                discuss time management with a coach and have a conversation
+                about administration tools.
+>>>>>>> Stashed changes
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-5">
+              <AccordionTrigger className="text-xl font-medium">
+                Legal
+              </AccordionTrigger>
+              <AccordionContent className="w-3/4 text-lg">
+<<<<<<< Updated upstream
+                {mockdata?.map((item, idx) => {
+                  console.log("t", item);
+                  return (
+                    <div>
+                      <div className="py-2 text-pink-400 ">
+                        {item.fields.confidenceQuestion}
+                      </div>
+                      <div className="">
+                        Score: {item.fields.confidenceValue}
+                      </div>
+
+                      <div>
+                        {item.fields.questions.map((q, idxs) => {
+                          return (
+                            <div>
+                              <ul className=" py-2 text-pink-400">
+                                <li>{q.fields.question}</li>
+                                <li className="py-2 text-black ">
+                                  {q.fields.text}
+                                </li>
+                              </ul>
+                              {q.fields.competenceChecklist
+                                ?.filter((obj) => Boolean(obj.fields.selected))
+                                .map((obj) => {
+                                  console.log("iss", obj);
+                                  return (
+                                    <div>
+                                      <ul className="list-inside list-disc text-black md:ml-3">
+                                        <li>{obj.fields.text}</li>
+                                      </ul>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+=======
+                You feel
+                <span className="text-pink-600"> Not at All Confident </span> in
+                this skill. A coach will give you more tailored advice to enable
+                you to grow in this area. These things might include access to
+                legal support and creating contracts.
+>>>>>>> Stashed changes
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-6">
+              <AccordionTrigger className="text-xl font-medium">
+                Financial Literacy
+              </AccordionTrigger>
+              <AccordionContent className="w-3/4 text-lg">
+<<<<<<< Updated upstream
+                {mockdata?.map((item, idx) => {
+                  console.log("t", item);
+                  return (
+                    <div>
+                      <div className="py-2 text-pink-400 ">
+                        {item.fields.confidenceQuestion}
+                      </div>
+                      <div className="">
+                        Score: {item.fields.confidenceValue}
+                      </div>
+
+                      <div>
+                        {item.fields.questions.map((q, idxs) => {
+                          return (
+                            <div>
+                              <ul className=" py-2 text-pink-400">
+                                <li>{q.fields.question}</li>
+                                <li className="py-2 text-black ">
+                                  {q.fields.text}
+                                </li>
+                              </ul>
+                              {q.fields.competenceChecklist
+                                ?.filter((obj) => Boolean(obj.fields.selected))
+                                .map((obj) => {
+                                  console.log("iss", obj);
+                                  return (
+                                    <div>
+                                      <ul className="list-inside list-disc text-black md:ml-3">
+                                        <li>{obj.fields.text}</li>
+                                      </ul>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+=======
+                You feel{" "}
+                <span className="text-pink-600"> Somewhat Confident</span> in
+                this skill. To improve your skills in this area, we can help you
+                to create a target day rate and access grants.
+>>>>>>> Stashed changes
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
-    </>
+    </div>
   );
+}
+{
+  /* <>
+<div className="flex w-[390px] flex-col bg-white pl-4 pr-3.5 font-inter">
+  <div className="mt-16 flex w-full flex-col self-stretch max-md:mt-10">
+    <div className="ml-3.5 max-w-[335px] whitespace-nowrap pb-2 text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
+      Intro To Freelance Quiz:
+    </div>
+    <div className="ml-3.5 max-w-[335px] pb-4 text-3xl font-bold leading-[112.5%] text-black max-md:ml-2.5">
+      Results
+    </div>
+
+    {showSecond ? (
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      <SubRadar onClick={() => setShowSecond(!showSecond)} />
+    ) : (
+      <Radar
+        onClick={() => setShowSecond(!showSecond)}
+        data={{
+          labels: [
+            "SALES",
+            "MARKETING",
+            "FINANCE",
+            "LEGAL",
+            "ADMIN",
+            "PORTFOLIO",
+          ],
+          datasets: [
+            {
+              label: "Confidence",
+              data: [confidence, 0, 0, 0, 0, 90],
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgb(255, 99, 132)",
+              pointBackgroundColor: "rgb(255, 99, 132)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgb(255, 99, 132)",
+            },
+            {
+              label: "Competence",
+              data: [competence, 0, 0, 0, 0, 50],
+              backgroundColor: "rgba(54, 162, 235, 0.2)",
+              borderColor: "rgb(54, 162, 235)",
+              pointBackgroundColor: "rgb(54, 162, 235)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgb(54, 162, 235)",
+            },
+          ],
+        }}
+      />
+    )}
+    <div className="ml-2 mt-6 text-3xl leading-8 text-black">
+      <span className="text-black">Hello </span>
+      <span className="text-pink-600">Toyin, </span>
+      <span className="text-black">here are your quiz results</span>
+    </div>
+    <div className="mt-12 max-w-[335px] self-center text-xl leading-7 text-pink-600 max-md:mt-10">
+      <span className="font-bold text-black">Sales: </span>
+
+      <span className="font-bold text-black">Marketing: </span>
+
+      <span className="font-bold text-black">
+        <br />
+        Portfolio:
+      </span>
+
+      <span className="font-bold text-black">
+        <br />
+        Admin:
+      </span>
+
+      <span className="font-bold text-black">
+        <br />
+        Legal:
+      </span>
+
+      <span className="font-bold text-black">
+        <br />
+        Financial Literacy:
+      </span>
+    </div>
+    <Button className="m-4">Click Here for the Full Report</Button>
+  </div>
+  <img
+    loading="lazy"
+    srcSet="..."
+    className="mb-20 mt-36 aspect-[6] w-[282px] max-w-full self-center overflow-hidden object-cover object-center max-md:my-10"
+  />
+</div>
+</> */
 }
