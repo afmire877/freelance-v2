@@ -22,10 +22,7 @@ import { Button } from "~/components/ui/button";
 import useQuizStore from "~/store/quizStore";
 import { QuestionTypes } from "~/model/question";
 import Image from "next/image";
-<<<<<<< Updated upstream
 import { mockdata } from "~/components/mockdata";
-=======
->>>>>>> Stashed changes
 
 ChartJS.register(
   RadialLinearScale,
@@ -128,13 +125,6 @@ export default function Result() {
       <div className="self-center whitespace-nowrap p-4 text-3xl font-medium text-black  md:mx-6  md:my-10 md:pt-12 lg:text-5xl ">
         Intro to Freelance Quiz{" "}
       </div>
-<<<<<<< Updated upstream
-=======
-      <div className="self-center whitespace-nowrap p-4 text-3xl font-medium text-black  md:mx-6  md:my-2  lg:text-4xl">
-        {" "}
-        Results:
-      </div>
->>>>>>> Stashed changes
       <div className="md:flex">
         <div className="flex flex-col md:mx-10 md:shrink-0 md:py-20">
           {showSecond ? (
@@ -143,7 +133,7 @@ export default function Result() {
             <SubRadar onClick={() => setShowSecond(!showSecond)} />
           ) : (
             <Radar
-              className="lg:mx-20 lg:w-[700px]"
+              className="lg:mx-20 lg:w-[400px]"
               onClick={() => setShowSecond(!showSecond)}
               data={{
                 labels: [
@@ -184,7 +174,6 @@ export default function Result() {
           <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
             <span className="text-black">Hello </span>
             <span className="text-pink-600">Toyin, </span>
-<<<<<<< Updated upstream
             <span className="text-black">
               here are your quiz results and answers:
             </span>
@@ -239,37 +228,6 @@ export default function Result() {
                     </div>
                   );
                 })}
-=======
-            <span className="text-black">here are your quiz results:</span>
-          </div>
-          <Accordion type="single" collapsible className=" max-w-full  ">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="text-xl font-medium">
-                Sales
-              </AccordionTrigger>
-              <AccordionContent className="w-3/4  text-lg">
-                You feel{" "}
-                <span className="text-pink-600">Slightly Confident </span> in
-                this skill. There are some areas we could focus on for growth in
-                this area. You may want to focus on learning how to create a
-                purchase order or understanding how to manage your workload and
-                capacity. Marketing: You feel Somewhat Confident in this skill.
-                You also might want to create a network of potential clients or
-                understanding how to strategise your marketing goals for next
-                the year. Portfolio: You feel Quite Confident in this skill.
-                There are some areas we could focus on for growth in this area.
-                You may want to create a digital portfolio and including having
-                a portfolio review with someone in your field. Admin: You feel
-                Slightly Confident in this skill. To help you to grow in this
-                area, you may want to discuss time management with a coach and
-                have a conversation about administration tools. Legal: You feel
-                Not At All Confident in this skill. A coach will give you more
-                tailored advice to enable you to grow in this area. These things
-                might include access to legal support and creating contracts.
-                Financial Literacy: You feel Somewhat Confident in this skill.
-                To improve your skills in this area, we can help you to create a
-                target day rate and access grants.
->>>>>>> Stashed changes
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
@@ -277,7 +235,6 @@ export default function Result() {
                 Marketing
               </AccordionTrigger>
               <AccordionContent className="w-3/4 text-lg">
-<<<<<<< Updated upstream
                 {mockdata?.map((item, idx) => {
                   console.log("t", item);
                   return (
@@ -318,13 +275,6 @@ export default function Result() {
                     </div>
                   );
                 })}
-=======
-                You feel{" "}
-                <span className="text-pink-600"> Somewhat Confident </span> in
-                this skill. You also might want to create a network of potential
-                clients or understanding how to strategise your marketing goals
-                for next the year.
->>>>>>> Stashed changes
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
@@ -332,7 +282,6 @@ export default function Result() {
                 Portfolio
               </AccordionTrigger>
               <AccordionContent className="w-3/4 text-lg">
-<<<<<<< Updated upstream
                 {mockdata?.map((item, idx) => {
                   console.log("t", item);
                   return (
@@ -373,13 +322,6 @@ export default function Result() {
                     </div>
                   );
                 })}
-=======
-                You feel <span className="text-pink-600"> Quite Confident</span>{" "}
-                Quite Confident in this skill. There are some areas we could
-                focus on for growth in this area. You may want to create a
-                digital portfolio and including having a portfolio review with
-                someone in your field.
->>>>>>> Stashed changes
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4">
@@ -387,7 +329,6 @@ export default function Result() {
                 Admin
               </AccordionTrigger>
               <AccordionContent className="w-3/4 text-lg">
-<<<<<<< Updated upstream
                 {mockdata?.map((item, idx) => {
                   console.log("t", item);
                   return (
@@ -428,13 +369,6 @@ export default function Result() {
                     </div>
                   );
                 })}
-=======
-                You feel
-                <span className="text-pink-600"> Slightly Confident</span> in
-                this skill. To help you to grow in this area, you may want to
-                discuss time management with a coach and have a conversation
-                about administration tools.
->>>>>>> Stashed changes
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-5">
@@ -442,7 +376,6 @@ export default function Result() {
                 Legal
               </AccordionTrigger>
               <AccordionContent className="w-3/4 text-lg">
-<<<<<<< Updated upstream
                 {mockdata?.map((item, idx) => {
                   console.log("t", item);
                   return (
@@ -483,13 +416,6 @@ export default function Result() {
                     </div>
                   );
                 })}
-=======
-                You feel
-                <span className="text-pink-600"> Not at All Confident </span> in
-                this skill. A coach will give you more tailored advice to enable
-                you to grow in this area. These things might include access to
-                legal support and creating contracts.
->>>>>>> Stashed changes
               </AccordionContent>
             </AccordionItem>
 
@@ -498,7 +424,6 @@ export default function Result() {
                 Financial Literacy
               </AccordionTrigger>
               <AccordionContent className="w-3/4 text-lg">
-<<<<<<< Updated upstream
                 {mockdata?.map((item, idx) => {
                   console.log("t", item);
                   return (
@@ -539,12 +464,6 @@ export default function Result() {
                     </div>
                   );
                 })}
-=======
-                You feel{" "}
-                <span className="text-pink-600"> Somewhat Confident</span> in
-                this skill. To improve your skills in this area, we can help you
-                to create a target day rate and access grants.
->>>>>>> Stashed changes
               </AccordionContent>
             </AccordionItem>
           </Accordion>
