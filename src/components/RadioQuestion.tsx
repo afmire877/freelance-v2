@@ -16,10 +16,9 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
   const [value, setValue] = useState<boolean[]>(
     Array(checklist.length).fill(false),
   );
-  console.log("checklist", prompt);
 
   return (
-    <div className="font-inter mt-10">
+    <div className="mt-10 font-inter">
       <h1 className="   flex  w-[306px] break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full lg:w-full lg:text-5xl">
         {prompt}
       </h1>

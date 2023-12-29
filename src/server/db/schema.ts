@@ -1,7 +1,6 @@
 import { sql } from "drizzle-orm";
 
 import {
-  date,
   integer,
   json,
   pgTableCreator,
@@ -9,29 +8,24 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { type Result } from "postcss";
 
 export const pgTable = pgTableCreator((name) => `freelance-v2_${name}`);
 
 export const submissions = pgTable("submission", {
   id: serial("id").primaryKey(),
-  answers: json("answers").notNull(),
+  answers: json("answers").default([]),
   profileId: integer("profileId").references(() => profiles.id, {
     onDelete: "cascade",
   }),
+  score: json("score").$type<Result[]>().default([]),
 
-  salesPercentage: integer("portfolioPercentage").default(0),
+  salesPercentage: integer("salesPercentage").default(0),
   portfolioPercentage: integer("portfolioPercentage").default(0),
   marketingPercentage: integer("marketingPercentage").default(0),
   financePercentage: integer("financePercentage").default(0),
   legalPercentage: integer("legalPercentage").default(0),
   adminPercentage: integer("adminPercentage").default(0),
-
-  salesScore: integer("portfolioScore").default(0),
-  portfolioScore: integer("portfolioScore").default(0),
-  marketingScore: integer("marketingScore").default(0),
-  financeScore: integer("financeScore").default(0),
-  legalScore: integer("legalScore").default(0),
-  adminScore: integer("adminPercentage").default(0),
 
   overallScore: varchar("overallScore").default("0"),
   createdAt: timestamp("created_at")

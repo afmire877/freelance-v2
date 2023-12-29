@@ -1,6 +1,9 @@
 import { type ContentfulClientApi, createClient } from "contentful";
 
 import { type QuestionGroup } from "~/model/question";
+// import { type Result } from "~/pages/result";
+// import { db } from "~/server/db";
+// import { submissions } from "~/server/db/schema";
 
 const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE ?? "";
 
@@ -41,10 +44,35 @@ export const getQuestions = async () => {
   return questions.items as unknown as QuestionGroup[];
 };
 
-// export const saveSubmission = async () => {
-//   const questions = await client?.
+// export const saveSubmission = async (
+//   result: Result[],
+//   answers: QuestionGroup[],
+// ) => {
+//   const partialSubmission = result
+//     .map((item) => {
+//       return {
+//         [`${item.topic.toLowerCase()}Percentage`]: item.competence.percentage,
+//       };
+//     })
+//     .reduce((acc, item) => {
+//       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//       //@ts-expect-error
+//       const [key, value] = Object.entries(item)[0];
+//       acc[key] = value;
 
-//   if (questions === undefined) throw new Error("Questions not found");
+//       return acc;
+//     }, {});
 
-//   return questions.items as unknown as QuestionGroup[];
+//   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//   //@ts-ignore
+//   const questions = await db
+//     .insert(submissions)
+//     .values({
+//       answers: JSON.stringify(answers),
+//       score: JSON.stringify(result),
+//       ...partialSubmission,
+//     })
+//     .execute();
+
+//   return questions;
 // };

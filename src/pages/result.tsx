@@ -15,6 +15,8 @@ import SubRadar from "~/components/subRadar";
 import { Button } from "~/components/ui/button";
 import useQuizStore from "~/store/quizStore";
 import { QuestionTypes } from "~/model/question";
+import { api } from "~/utils/api";
+import useUserStore from "~/store/userStore";
 
 ChartJS.register(
   RadialLinearScale,
@@ -25,7 +27,7 @@ ChartJS.register(
   Legend,
 );
 
-type Result = {
+export type Result = {
   topic: string;
   confidence: {
     score: number;
@@ -39,6 +41,8 @@ type Result = {
 
 export default function Result() {
   const bank = useQuizStore((s) => s.bank);
+  const user = useUserStore((s) => s.user);
+  const mutation = api.submission.create.useMutation();
 
   const [confidence, setConfidence] = useState(0);
   const [competence, setCompetence] = useState(0);
@@ -46,37 +50,20 @@ export default function Result() {
 
   const calculateResult = () => {
     if (!bank) return;
-    console.log(bank);
     const grouped = groupWith((a, b) => {
       return a.fields.topic === b.fields.topic;
     }, bank);
-    console.log("g", grouped);
 
     const result: Result[] = grouped.map((g) => {
-      // console.log(
-      //   "confidence",
-      //   g.map((item) => item.questions[0].value),
-      // );
       const confidenceNumber = g.reduce((acc, cur) => {
         const value = cur?.fields.confidenceValue ?? 0;
         return acc + value;
       }, 0);
 
-      // console.log(
-      //   "competence",
-      //   g.map((item) =>
-      //     item.questions[1].checklist
-      //       .filter((c) => c.selected)
-      //       .map((c) => c.weighting)
-      //       .flat(),
-      //   ),
-      // );
-
       const compNumber = g.reduce((acc, cur) => {
         const found = cur?.fields.questions.find(
           ({ fields }) => fields?.type === QuestionTypes.COMPETENCE,
         )?.fields;
-        console.log("found", found);
 
         if (!found) return acc;
 
@@ -104,6 +91,7 @@ export default function Result() {
 
     console.log("result", result);
 
+    mutation.mutate({ result, answers: bank, user });
     setConfidence(result[0]?.confidence.percentage ?? 0);
 
     setCompetence(result[0]?.competence.percentage ?? 0);
@@ -195,11 +183,6 @@ export default function Result() {
           </div>
           <Button className="m-4">Click Here for the Full Report</Button>
         </div>
-        <img
-          loading="lazy"
-          srcSet="..."
-          className="mb-20 mt-36 aspect-[6] w-[282px] max-w-full self-center overflow-hidden object-cover object-center max-md:my-10"
-        />
       </div>
     </>
   );
