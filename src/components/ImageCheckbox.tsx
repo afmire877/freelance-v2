@@ -44,7 +44,7 @@ export function ImageCheckbox(props) {
               <Checkbox id={id} />
               <label
                 htmlFor={id}
-                className="text-lg font-normal leading-normal text-black peer-disabled:cursor-not-allowed  peer-disabled:opacity-70 lg:overflow-hidden lg:text-clip"
+                className=" text-lg font-normal leading-normal text-black hover:border-b-2 hover:border-pink-600 peer-disabled:cursor-not-allowed  peer-disabled:opacity-70 lg:overflow-hidden lg:text-clip"
               >
                 {text}
               </label>

@@ -43,12 +43,13 @@ export default function ScaleQuestion({ question }: Props) {
                   type="radio"
                   name="scale"
                   id={`scale-${idx}`}
+                  className="accent-pink-600"
                 />
               </div>
 
               <label
                 htmlFor={`scale-${idx}`}
-                className="mt-1 whitespace-nowrap  text-lg leading-normal text-black lg:text-2xl "
+                className="mt-1 whitespace-nowrap  text-lg leading-normal text-black hover:border-b-2 hover:border-pink-600 lg:text-2xl "
               >
                 {content}
               </label>

@@ -51,7 +51,7 @@ export default function ChecklistQuestion({ checklist, prompt }: Props) {
               <div className=" grid gap-1.5">
                 <label
                   htmlFor={`checklist-${idx}`}
-                  className="whitespace-normal text-lg  font-normal leading-normal text-black  peer-disabled:cursor-not-allowed peer-disabled:opacity-70 lg:text-2xl"
+                  className="whitespace-normal text-lg font-normal leading-normal  text-black hover:border-b-2 hover:border-pink-600  peer-disabled:cursor-not-allowed peer-disabled:opacity-70 lg:text-2xl"
                 >
                   {text}
                 </label>

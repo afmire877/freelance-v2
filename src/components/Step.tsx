@@ -8,7 +8,9 @@ import { TextBox } from "./TextBox";
 import { ImageCheckbox } from "./ImageCheckbox";
 import ScaleQuestion from "./ScaleQuestion";
 import { Button } from "./ui/button";
-
+import ArrowLeft from "../assets/arrow-left.svg";
+import Image from "next/image";
+import ArrowRight from "../assets/arrow-right.svg";
 export default function Step() {
   const currentIndex = useQuizStore((state) => state.currentIndex);
   const setCurrentIndex = useQuizStore((state) => state.setCurrentIndex);
@@ -56,11 +58,10 @@ export default function Step() {
     <div className="fle flex h-full flex-col justify-between">
       <div className="">
         {/* {step === 1 && <TextBox />} */}
-        {/* {step === 1 && <ImageCheckbox />} */}
+        {/* {step === 1 && <ImageCheckbox />}       */}
 
         {/* {step === 1 && <ScaleQuestion question={scale.question} />} */}
         {step === 1 && <ScaleQuestion question={confidenceQuestion} />}
-
 
         {step === 2 && (
           <>
@@ -81,8 +82,20 @@ export default function Step() {
         {step === 3 && <div></div>}
       </div>
       <div className=" flex justify-between px-2 py-4">
-        <Button onClick={handlePrevBtn}>Prev</Button>
-        <Button onClick={handleNextBtn}>Next</Button>
+        <div
+          onClick={handlePrevBtn}
+          className="flex items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
+        >
+          <Image src={ArrowLeft} alt="" height={20} width={20} />
+          <div>Prev</div>
+        </div>
+        <div
+          onClick={handleNextBtn}
+          className="flex items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
+        >
+          <div>Next</div>
+          <Image src={ArrowRight} alt="" height={20} width={20} />
+        </div>
       </div>
     </div>
   );
