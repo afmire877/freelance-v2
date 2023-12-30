@@ -17,6 +17,7 @@ export default function Step() {
 
   const [step, setStep] = useState(1);
   const router = useRouter();
+  const isFirst = currentIndex === 0 && step === 1;
 
   if (!bank?.[currentIndex]) return null;
 
@@ -50,7 +51,7 @@ export default function Step() {
 
     if (step === 2) return setStep(1);
 
-    setCurrentIndex(currentIndex + 1);
+    setCurrentIndex(currentIndex - 1);
   };
   return (
     <div className="fle flex h-full flex-col justify-between">
@@ -109,14 +110,18 @@ export default function Step() {
 
         {step === 3 && <TextBox />}
       </div>
-      <div className=" flex justify-between px-2 py-4">
-        <div
-          onClick={handlePrevBtn}
-          className="flex items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
-        >
-          <Image src={ArrowLeft} alt="" height={20} width={20} />
-          <div>Prev</div>
-        </div>
+      <div className="flex justify-between px-2 py-4">
+        {!isFirst ? (
+          <div
+            onClick={handlePrevBtn}
+            className="flex items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
+          >
+            <Image src={ArrowLeft} alt="" height={20} width={20} />
+            <div>Prev</div>
+          </div>
+        ) : (
+          <div />
+        )}
         <div
           onClick={handleNextBtn}
           className="flex items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"

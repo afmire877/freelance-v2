@@ -1,11 +1,4 @@
 import { useEffect, useState } from "react";
-import { Radar } from "react-chartjs-2";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../components/ui/accordion";
 
 import { groupWith, sum } from "ramda";
 import { mockdata } from "~/components/mockdata";
@@ -21,11 +14,10 @@ import {
   RadialLinearScale,
   Tooltip,
 } from "chart.js";
-import useUserStore from "~/store/userStore";
-import { useQuestions } from "~/hooks/useQuestions";
-import { api } from "~/utils/api";
 import Chart from "~/components/Chart";
-import { Button } from "~/components/ui/button";
+import { useQuestions } from "~/hooks/useQuestions";
+import useUserStore from "~/store/userStore";
+import { api } from "~/utils/api";
 
 ChartJS.register(
   RadialLinearScale,
@@ -134,16 +126,16 @@ export default function Result() {
 
   return (
     <div className="mx-auto max-w-md overflow-hidden  font-inter md:max-w-full">
-      <div className="md:flex">
-        <div className="p-8 ">
-          <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
-            <span className="text-black">Hello </span>
-            <span className="text-pink-600">{user.name}, </span>
-            <span className="text-black">
-              here are a spanshot of quiz results:
-            </span>
-          </div>
+      <div className="p-8 ">
+        <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
+          <span className="text-black">Hello </span>
+          <span className="text-pink-600">{user.name}, </span>
+          <span className="text-black">
+            here are a spanshot of quiz results:
+          </span>
         </div>
+      </div>
+      <div className=" md:flex">
         <div className="flex flex-col md:mx-10 md:shrink-0 md:py-20">
           <Chart
             competence={chartData.competence}
@@ -151,11 +143,10 @@ export default function Result() {
           />
         </div>
 
-        <p className="mt-10">
-          You will be assigned a Coach to discuss this result with you.
-        </p>
-
         <div className="my-20 ">
+          <p className="mt-10 w-full">
+            You will be assigned a Coach to discuss this result with you.
+          </p>
           <div className="my-10">
             <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
               <span className="text-black">Check out these resources:</span>

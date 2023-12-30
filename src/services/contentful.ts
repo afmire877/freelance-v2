@@ -1,9 +1,7 @@
 import { type ContentfulClientApi, createClient } from "contentful";
 
 import { type QuestionGroup } from "~/model/question";
-// import { type Result } from "~/pages/result";
-// import { db } from "~/server/db";
-// import { submissions } from "~/server/db/schema";
+import { BLOCKS, MARKS } from "@contentful/rich-text-types";
 
 const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE ?? "";
 
@@ -27,11 +25,6 @@ if (typeof window !== "undefined") {
     });
   }
 }
-
-// const createClientManagement = createClient({
-//   space,
-//   accessToken: process.env.CONTENTFUL_MANAGEMENT_API_ACCESS_TOKEN ?? "",
-// });
 
 export const getQuestions = async () => {
   const questions = await client?.getEntries({

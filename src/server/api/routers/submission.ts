@@ -50,7 +50,7 @@ export const submissionRouter = createTRPCRouter({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     await db.insert(submissions).values(values).execute();
 
-    return "ok";
+    return true;
   }),
   get: publicProcedure
     .input(z.object({ uuid: z.string() }))
@@ -59,6 +59,7 @@ export const submissionRouter = createTRPCRouter({
         .select()
         .from(submissions)
         .where(eq(submissions.uuid, String(input?.uuid) ?? ""))
+        .innerJoin(profiles, eq(profiles.id, submissions.profileId))
         .execute();
 
       return found;

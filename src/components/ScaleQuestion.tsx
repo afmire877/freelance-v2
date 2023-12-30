@@ -3,27 +3,27 @@ import useQuizStore from "~/store/quizStore";
 interface Props {
   question: string;
 }
-
+export const scale = {
+  "Very Confident": 10,
+  "Quite Confident": 7.5,
+  "Somewhat Confident": 5,
+  "Slightly Confident": 2.5,
+  "Not at all Confident": 0,
+};
 export default function ScaleQuestion({ question }: Props) {
   const currentIndex = useQuizStore((state) => state.currentIndex);
   const updateQuestionValue = useQuizStore(
     (state) => state.updateQuestionValue,
   );
-  const scale = [
-    "Very Confident",
-    "Quite Confident",
-    "Somewhat Confident",
-    "Slightly Confident",
-    "Not at all Confident",
-  ].reverse();
+
   console.log("scale");
   return (
-    <div className="font-inter flex flex-col bg-white ">
+    <div className="flex flex-col bg-white font-inter ">
       <div className="mt-10 flex w-[306px] max-w-full flex-col md:w-full md:px-2 lg:w-full  ">
         <div className="flex  w-[306px] break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full md:text-4xl lg:w-full lg:text-5xl">
           {question}
         </div>
-        {scale.map((content, idx) => {
+        {Object.entries(scale).map(([content, points], idx) => {
           return (
             <div
               key={idx}
@@ -31,9 +31,8 @@ export default function ScaleQuestion({ question }: Props) {
             >
               <div className="">
                 <input
-                  value={(idx + 1) * 2}
+                  value={points}
                   onChange={(e) => {
-                    console.log("e.target.value", e.target.value);
                     updateQuestionValue({
                       index: currentIndex,
                       type: "scale",

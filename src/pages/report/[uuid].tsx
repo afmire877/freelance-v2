@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import {
   Accordion,
@@ -6,11 +7,8 @@ import {
   AccordionTrigger,
 } from "../../components/ui/accordion";
 
-import { groupWith, sum } from "ramda";
+import { groupWith } from "ramda";
 import { mockdata } from "~/components/mockdata";
-import { QuestionTypes } from "~/model/question";
-import useQuizStore from "~/store/quizStore";
-
 import {
   Chart as ChartJS,
   Filler,
@@ -20,13 +18,16 @@ import {
   RadialLinearScale,
   Tooltip,
 } from "chart.js";
-import useUserStore from "~/store/userStore";
-import { useQuestions } from "~/hooks/useQuestions";
-import { api } from "~/utils/api";
-import Chart from "~/components/Chart";
-import { type Result } from "../result";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
+import Chart from "~/components/Chart";
+import Spinner from "~/components/Spinner";
+import { api } from "~/utils/api";
+import { type Result } from "../result";
+import { Badge } from "~/components/ui/badge";
+import { QuestionTypes } from "~/model/question";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { options } from "~/utils/contentful";
 
 ChartJS.register(
   RadialLinearScale,
@@ -37,71 +38,46 @@ ChartJS.register(
   Legend,
 );
 
+const scale = {
+  10: "Very Confident",
+  7.5: "Quite Confident",
+  5: "Somewhat Confident",
+  2.5: "Slightly Confident",
+  0: "Not at all Confident",
+};
+
 export default function Dashboard() {
   const params = useParams<{ uuid: string }>();
   const router = useRouter();
-  const { data, error } = api.submission.get.useQuery({ uuid: params.uuid });
+  const { data, error, isLoading } = api.submission.get.useQuery(
+    { uuid: params?.uuid },
+    { enabled: Boolean(params?.uuid) },
+  );
+  const [grouped, setGrouped] = useState([]);
   const [chartData, setChartData] = useState({
     confidence: [0, 0, 0, 0, 0, 0],
     competence: [0, 0, 0, 0, 0, 0],
   });
 
-  if (error) return router.push("/404");
+  const score = data?.submission.score as unknown as Result[];
+  const user = data?.profiles;
 
-  const bank = data?.answers;
-  const user = data?.score;
+  useEffect(() => {
+    if (!data?.submission.answers) return;
+    const g = groupWith(
+      (a, b) => {
+        return a.fields.topic === b.fields.topic;
+      },
+      data?.submission.answers,
+    ).reduce((acc, cur) => {
+      acc[cur[0].fields.topic] = cur;
 
-  console.log(data?.answers);
+      return acc;
+    }, {});
 
-  const mutation = api.submission.create.useMutation();
-
-  const calculateResult = () => {
-    if (!bank) return;
-    console.log(bank);
-    const grouped = groupWith((a, b) => {
-      return a.fields.topic === b.fields.topic;
-    }, bank);
-
-    const result: Result[] = grouped.map((g) => {
-      const confidenceNumber = g.reduce((acc, cur) => {
-        const value = cur?.fields.confidenceValue ?? 0;
-        return acc + value;
-      }, 0);
-
-      const compNumber = g.reduce((acc, cur) => {
-        const found = cur?.fields.questions.find(
-          ({ fields }) => fields?.type === QuestionTypes.COMPETENCE,
-        )?.fields;
-        console.log("found", found);
-
-        if (!found) return acc;
-
-        const weighting = found.competenceChecklist
-          .filter((c) => c.fields.selected)
-          .map((c) => c.fields.weighting);
-
-        const count = sum(weighting);
-
-        return acc + count;
-      }, 0);
-
-      return {
-        topic: g[0]?.fields.topic,
-        confidence: {
-          score: confidenceNumber,
-          percentage: (confidenceNumber / (g.length * 10)) * 100,
-        },
-        competence: {
-          score: compNumber,
-          percentage: (compNumber / (g.length * 10)) * 100,
-        },
-      };
-    });
-
-    mutation.mutate({ result, user, answers: bank });
-
+    setGrouped(g);
     const resultByTopic = (topic, type: "confidence" | "competence") => {
-      return result.find((r) => r.topic === topic)?.[type].percentage ?? 0;
+      return score.find((r) => r.topic === topic)?.[type].percentage ?? 0;
     };
 
     setChartData({
@@ -122,11 +98,17 @@ export default function Dashboard() {
         resultByTopic("Portfolio", "competence"),
       ],
     });
-  };
+  }, [score, data?.submission.answers]);
+
+  if (isLoading) return <Spinner />;
+
+  if (error) return router.push("/404");
+
+  console.log(grouped);
 
   return (
-    <div className="mx-auto max-w-md overflow-hidden  font-inter md:max-w-full">
-      <div className="self-center whitespace-nowrap p-4 text-3xl font-medium text-black  md:mx-6  md:my-10 md:pt-12 lg:text-5xl ">
+    <div className="mx-auto max-w-md  font-inter md:max-w-full">
+      <div className="w-full self-center whitespace-nowrap p-4 text-center text-3xl font-medium text-black  md:mx-6  md:my-10 md:pt-12 lg:text-5xl ">
         Intro to Freelance Quiz{" "}
       </div>
       <div className="md:flex">
@@ -136,297 +118,97 @@ export default function Dashboard() {
             confidence={chartData.confidence}
           />
         </div>
-        <div className="p-8 ">
+        <div className="p-8">
           <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
             <span className="text-black">Hello </span>
-            <span className="text-pink-600">{user.name}, </span>
+            <span className="text-pink-600">{user?.name}, </span>
             <span className="text-black">
               here are your quiz results and answers:
             </span>
           </div>
           <Accordion
-            type="single"
+            type="multiple"
             collapsible
-            className=" w-full lg:w-[1000px]  "
+            className=" w-full max-xl:w-[1000px]  "
           >
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="md:4xl text-2xl font-medium">
-                Sales
-              </AccordionTrigger>
-              <AccordionContent className="tr w-3/4  text-xl">
-                {data?.answers?.map((item, idx) => {
-                  console.log("t", item);
-                  return (
-                    <div key={idx}>
-                      <div className="py-2 text-pink-400 ">
-                        {item.fields.confidenceQuestion}
-                      </div>
-                      <div className="">
-                        Score: {item.fields.confidenceValue}
-                      </div>
+            {Object.entries(grouped)
+              .reverse()
+              .map(([topic, value], idx) => {
+                return (
+                  <AccordionItem key={idx} value={`${idx}`}>
+                    <AccordionTrigger className="md:4xl text-2xl font-medium">
+                      {topic}
+                    </AccordionTrigger>
+                    <AccordionContent className="tr w-full  text-xl">
+                      {value?.map((item, idx) => {
+                        return (
+                          <>
+                            {" "}
+                            <AccordionItem
+                              key={item.sys.id}
+                              value={item.sys.id}
+                            >
+                              <AccordionTrigger className="py-2 text-left text-pink-400 ">
+                                Q{idx + 1}
+                                {") "} {item.fields.confidenceQuestion}
+                                <Badge>{item.fields.subTopic}</Badge>
+                              </AccordionTrigger>
+                              <AccordionContent className="">
+                                Answer:{" "}
+                                {scale[item.fields.confidenceValue] ??
+                                  `${item.fields.confidenceValue}/10`}
+                              </AccordionContent>
+                            </AccordionItem>
+                            {item.fields.questions.map((q) => {
+                              return q.fields.type === QuestionTypes.CHOICE ? (
+                                <AccordionItem key={q.sys.id} value={q.sys.id}>
+                                  <AccordionTrigger className="py-2 text-left text-pink-400">
+                                    {q.fields.question}
+                                    <Badge>{item.fields.subTopic}</Badge>
+                                  </AccordionTrigger>
 
-                      <div>
-                        {item.fields.questions.map((q, idx) => {
-                          return (
-                            <div key={idx}>
-                              <ul className=" py-2 text-pink-400">
-                                <li>{q.fields.question}</li>
-                                <li className="py-2 text-black ">
-                                  {q.fields.text}
-                                </li>
-                              </ul>
-                              {q.fields.competenceChecklist
-                                ?.filter((obj) => Boolean(obj.fields.selected))
-                                ?.map((obj, idx) => {
-                                  if (!obj) return null;
-                                  return (
-                                    <div key={idx}>
-                                      <ul className="list-inside list-disc text-black md:ml-3">
-                                        <li>{obj?.fields?.text}</li>
-                                      </ul>
+                                  <AccordionContent className="text-left text-pink-400">
+                                    {documentToReactComponents(
+                                      q?.fields?.choiceQuestion,
+                                      options,
+                                    )}
+                                    <div key={idx} className="text-black">
+                                      {q?.text ?? "No answer"}
                                     </div>
-                                  );
-                                })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger className="text-xl font-medium">
-                Marketing
-              </AccordionTrigger>
-              <AccordionContent className="w-3/4 text-lg">
-                {mockdata?.map((item, idx) => {
-                  console.log("t", item);
-                  return (
-                    <div key={idx}>
-                      <div className="py-2 text-pink-400 ">
-                        {item.fields.confidenceQuestion}
-                      </div>
-                      <div className="">
-                        Score: {item.fields.confidenceValue}
-                      </div>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              ) : (
+                                <AccordionItem key={q.sys.id} value={q.sys.id}>
+                                  <AccordionTrigger className="py-2 text-left text-pink-400">
+                                    {q.fields.question}{" "}
+                                    <Badge>{item.fields.subTopic}</Badge>
+                                  </AccordionTrigger>
 
-                      <div>
-                        {item.fields.questions.map((q, idxs) => {
-                          return (
-                            <div key={idx}>
-                              <ul className=" py-2 text-pink-400">
-                                <li>{q.fields.question}</li>
-                                <li className="py-2 text-black ">
-                                  {q.fields.text}
-                                </li>
-                              </ul>
-                              {q.fields.competenceChecklist
-                                ?.filter((obj) => Boolean(obj.fields.selected))
-                                .map((obj, idx) => {
-                                  return (
-                                    <div key={idx}>
-                                      <ul className="list-inside list-disc text-black md:ml-3">
-                                        <li>{obj.fields.text}</li>
-                                      </ul>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger className="text-xl font-medium">
-                Portfolio
-              </AccordionTrigger>
-              <AccordionContent className="w-3/4 text-lg">
-                {mockdata?.map((item, idx) => {
-                  console.log("t", item);
-                  return (
-                    <div key={idx}>
-                      <div className="py-2 text-pink-400 ">
-                        {item.fields.confidenceQuestion}
-                      </div>
-                      <div className="">
-                        Score: {item.fields.confidenceValue}
-                      </div>
-
-                      <div>
-                        {item.fields.questions.map((q, idx) => {
-                          return (
-                            <div key={idx}>
-                              <ul className=" py-2 text-pink-400">
-                                <li>{q.fields.question}</li>
-                                <li className="py-2 text-black ">
-                                  {q.fields.text}
-                                </li>
-                              </ul>
-                              {q.fields.competenceChecklist
-                                ?.filter((obj) => Boolean(obj.fields.selected))
-                                .map((obj, idx) => {
-                                  return (
-                                    <div key={idx}>
-                                      <ul className="list-inside list-disc text-black md:ml-3">
-                                        <li>{obj.fields.text}</li>
-                                      </ul>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-4">
-              <AccordionTrigger className="text-xl font-medium">
-                Admin
-              </AccordionTrigger>
-              <AccordionContent className="w-3/4 text-lg">
-                {mockdata?.map((item, idx) => {
-                  console.log("t", item);
-                  return (
-                    <div key={idx}>
-                      <div className="py-2 text-pink-400 ">
-                        {item.fields.confidenceQuestion}
-                      </div>
-                      <div className="">
-                        Score: {item.fields.confidenceValue}
-                      </div>
-
-                      <div>
-                        {item.fields.questions.map((q, idxs) => {
-                          return (
-                            <div key={idx}>
-                              <ul className=" py-2 text-pink-400">
-                                <li>{q.fields.question}</li>
-                                <li className="py-2 text-black ">
-                                  {q.fields.text}
-                                </li>
-                              </ul>
-                              {q.fields.competenceChecklist
-                                ?.filter((obj) => Boolean(obj.fields.selected))
-                                .map((obj) => {
-                                  return (
-                                    <div key={idx}>
-                                      <ul className="list-inside list-disc text-black md:ml-3">
-                                        <li>{obj.fields.text}</li>
-                                      </ul>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-5">
-              <AccordionTrigger className="text-xl font-medium">
-                Legal
-              </AccordionTrigger>
-              <AccordionContent className="w-3/4 text-lg">
-                {mockdata?.map((item, idx) => {
-                  console.log("t", item);
-                  return (
-                    <div key={idx}>
-                      <div className="py-2 text-pink-400 ">
-                        {item.fields.confidenceQuestion}
-                      </div>
-                      <div className="">
-                        Score: {item.fields.confidenceValue}
-                      </div>
-
-                      <div>
-                        {item.fields.questions.map((q, idx) => {
-                          return (
-                            <div key={idx}>
-                              <ul className=" py-2 text-pink-400">
-                                <li>{q.fields.question}</li>
-                                <li className="py-2 text-black ">
-                                  {q.fields.text}
-                                </li>
-                              </ul>
-                              {q.fields.competenceChecklist
-                                ?.filter((obj) => Boolean(obj.fields.selected))
-                                .map((obj, idx) => {
-                                  return (
-                                    <div key={idx}>
-                                      <ul className="list-inside list-disc text-black md:ml-3">
-                                        <li>{obj.fields.text}</li>
-                                      </ul>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-6">
-              <AccordionTrigger className="text-xl font-medium">
-                Financial Literacy
-              </AccordionTrigger>
-              <AccordionContent className="w-3/4 text-lg">
-                {mockdata?.map((item, idx) => {
-                  console.log("t", item);
-                  return (
-                    <div key={idx}>
-                      <div className="py-2 text-pink-400 ">
-                        {item.fields.confidenceQuestion}
-                      </div>
-                      <div className="">
-                        Score: {item.fields.confidenceValue}
-                      </div>
-
-                      <div>
-                        {item.fields.questions.map((q, idx) => {
-                          return (
-                            <div key={idx}>
-                              <ul className=" py-2 text-pink-400">
-                                <li>{q.fields.question}</li>
-                                <li className="py-2 text-black ">
-                                  {q.fields.text}
-                                </li>
-                              </ul>
-                              {q.fields.competenceChecklist
-                                ?.filter((obj) => Boolean(obj.fields.selected))
-                                .map((obj) => {
-                                  return (
-                                    <div key={idx}>
-                                      <ul className="list-inside list-disc text-black md:ml-3">
-                                        <li>{obj.fields.text}</li>
-                                      </ul>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
+                                  <AccordionContent className="">
+                                    {q.fields.competenceChecklist
+                                      ?.filter(({ fields }) =>
+                                        Boolean(fields.selected),
+                                      )
+                                      ?.map((obj, idx) => {
+                                        return (
+                                          <div key={idx}>
+                                            <ul className="list-inside list-disc text-black md:ml-3">
+                                              <li>{obj?.fields?.text}</li>
+                                            </ul>
+                                          </div>
+                                        );
+                                      })}
+                                  </AccordionContent>
+                                </AccordionItem>
+                              );
+                            })}
+                          </>
+                        );
+                      })}
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
           </Accordion>
         </div>
       </div>
