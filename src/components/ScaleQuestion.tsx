@@ -10,13 +10,12 @@ export const scale = {
   "Slightly Confident": 2.5,
   "Not at all Confident": 0,
 };
-export default function ScaleQuestion({ question }: Props) {
+export default function ScaleQuestion({ question, confidenceValue }: Props) {
   const currentIndex = useQuizStore((state) => state.currentIndex);
   const updateQuestionValue = useQuizStore(
     (state) => state.updateQuestionValue,
   );
 
-  console.log("scale");
   return (
     <div className="flex flex-col bg-white font-inter ">
       <div className="mt-10 flex w-[306px] max-w-full flex-col md:w-full md:px-2 lg:w-full  ">
@@ -32,6 +31,7 @@ export default function ScaleQuestion({ question }: Props) {
               <div className="">
                 <input
                   value={points}
+                  defaultChecked={confidenceValue === points}
                   onChange={(e) => {
                     updateQuestionValue({
                       index: currentIndex,

@@ -1,16 +1,36 @@
 import * as React from "react";
 import { Textarea } from "./ui/textarea";
-export function TextBox() {
+import { options } from "~/utils/contentful";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import useQuizStore from "~/store/quizStore";
+
+export function TextBox({ choiceQuestion: question, choiceQuestionValue }) {
+  const updateQuestionValue = useQuizStore((s) => s.updateQuestionValue);
+  const currentIndex = useQuizStore((s) => s.currentIndex);
+
   return (
-    <div className="font-inter mt-10  flex flex-col items-start ">
-      <div className=" ml-3 flex w-[306px]   break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:text-4xl lg:whitespace-nowrap lg:text-5xl ">
-        Which platforms do you use to share your work?
+    <div className="mt-10 flex  flex-col items-start font-inter ">
+      <div className=" ml-3 w-full text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5  md:text-4xl  ">
+        {documentToReactComponents(question, options)}
       </div>
       <div className="lg:text-1xl ml-3.5 mt-5 self-start text-lg text-black">
         Use the text box below to answer...
       </div>
 
-      <Textarea className=" mt-12 aspect-[1.78] w-full self-stretch overflow-hidden fill-white stroke-slate-950 stroke-[2px] object-contain object-center pb-6 lg:h-60 " />
+      <Textarea
+        className=" mt-12 aspect-[1.78] w-full self-stretch overflow-hidden fill-white stroke-slate-950 stroke-[2px] object-contain object-center pb-6 lg:h-60 "
+        placeholder="Type your answer here..."
+        defaultValue={choiceQuestionValue ?? null}
+        onChange={(e) => {
+          const target = e.target as HTMLTextAreaElement;
+
+          updateQuestionValue({
+            index: currentIndex,
+            type: "choice",
+            value: target.value,
+          });
+        }}
+      />
     </div>
   );
 }

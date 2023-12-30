@@ -11,13 +11,15 @@ interface State {
     type,
   }: {
     index: number;
-    type: "scale" | "checklist";
-    value: number | boolean[];
+    type: "scale" | "checklist" | "choice";
+    value: number | boolean[] | string;
   }) => void;
 
   questionId: number;
   setBank: (bank: QuestionGroup[]) => void;
   setQuestionId: (questionId: number) => void;
+  step: number;
+  setStep: (step: number) => void;
 }
 
 const useQuizStore = create<State>()((set) => ({
@@ -27,6 +29,8 @@ const useQuizStore = create<State>()((set) => ({
   setQuestionId: (questionId: number) => set({ questionId }),
   bank: [],
   setBank: (bank: QuestionGroup[]) => set({ bank }),
+  step: 0,
+  setStep: (step: number) => set({ step }),
   updateQuestionValue: ({ index, type, value }) =>
     set((state) => {
       const updatedBank = [...state.bank];
@@ -60,6 +64,17 @@ const useQuizStore = create<State>()((set) => ({
               },
             };
           });
+      }
+
+      if (type === "choice") {
+        const choiceIndex = section.fields.questions.findIndex(
+          ({ fields }) => fields?.type === QuestionTypes.CHOICE,
+        );
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        section.fields.questions[choiceIndex].fields.choiceQuestionValue =
+          String(value);
       }
 
       return { bank: updatedBank };

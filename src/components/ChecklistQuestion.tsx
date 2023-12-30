@@ -2,16 +2,18 @@
 // @ts-nocheck
 import { useState } from "react";
 import useQuizStore from "~/store/quizStore";
-import { type Checklist } from "~/utils/types";
 import { Checkbox } from "./ui/checkbox";
 import { type CompetenceChecklist } from "~/model/question";
 
 interface Props {
-  checklist: CompetenceChecklist[];
-  prompt: string;
+  competenceChecklist: CompetenceChecklist[];
+  question: string;
 }
 
-export default function ChecklistQuestion({ checklist, prompt }: Props) {
+export default function ChecklistQuestion({
+  competenceChecklist: checklist,
+  question,
+}: Props) {
   const updateQuestionValue = useQuizStore((s) => s.updateQuestionValue);
   const currentIndex = useQuizStore((s) => s.currentIndex);
 
@@ -22,10 +24,10 @@ export default function ChecklistQuestion({ checklist, prompt }: Props) {
   return (
     <div className=" mt-10 flex  flex-col items-start font-inter">
       <h1 className="   flex w-[306px]  break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full md:text-4xl lg:w-full lg:text-5xl">
-        {prompt}
+        {question}
       </h1>
       <div className="mt-6 ">
-        {checklist?.map(({ fields: { text } }, idx) => {
+        {checklist?.map(({ fields: { text, selected } }, idx) => {
           return (
             <div
               key={idx}
@@ -33,6 +35,7 @@ export default function ChecklistQuestion({ checklist, prompt }: Props) {
             >
               <Checkbox
                 id={`checklist-${idx}`}
+                defaultChecked={selected}
                 onCheckedChange={() => {
                   const newValue = value.map((choice, index) =>
                     idx === index ? !choice : choice,

@@ -5,6 +5,7 @@ export interface QuestionGroups {
 export enum QuestionTypes {
   CHOICE = "Choice Question",
   COMPETENCE = "Competence Question",
+  CONFIDENCE = "Confidence Question",
 }
 
 export interface QuestionGroup {
@@ -23,6 +24,7 @@ export interface Question {
     competenceChecklist?: CompetenceChecklist[];
     singleAnswer?: boolean;
     choiceQuestion?: string;
+    choiceQuestionValue?: string;
   };
 }
 
@@ -30,5 +32,6 @@ export interface CompetenceChecklist {
   fields: {
     text: string;
     weighting: number;
+    selected?: boolean;
   };
 }

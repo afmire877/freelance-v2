@@ -1,15 +1,18 @@
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useQuizStore from "~/store/quizStore";
 import { type CompetenceChecklist } from "~/model/question";
 
 interface Props {
-  checklist: CompetenceChecklist[];
-  prompt: string;
+  competenceChecklist: CompetenceChecklist[];
+  question: string;
 }
 
-export default function RadioQuestion({ checklist, prompt }: Props) {
+export default function RadioQuestion({
+  competenceChecklist: checklist,
+  question,
+}: Props) {
   const updateQuestionValue = useQuizStore((s) => s.updateQuestionValue);
   const currentIndex = useQuizStore((s) => s.currentIndex);
 
@@ -20,12 +23,11 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
   return (
     <div className="mt-10 font-inter">
       <h1 className="   flex  w-[306px] break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full lg:w-full lg:text-5xl">
-        {prompt}
+        {question}
       </h1>
 
       <RadioGroup
         className="ml-3.5 mt-10 flex grid max-w-full items-baseline  gap-1.5 gap-5 max-md:ml-2.5 max-md:mt-10 "
-        defaultValue="option-one"
         onChange={(e) => {
           const target = e.target as HTMLInputElement;
           const index = Number(target?.value);
@@ -43,12 +45,12 @@ export default function RadioQuestion({ checklist, prompt }: Props) {
           });
         }}
       >
-        {checklist?.map(({ fields: { text } }, index) => {
+        {checklist?.map(({ fields: { text, selected } }, index) => {
           return (
             <div key={index} className=" flex items-baseline space-x-2">
-              <RadioGroupItem defaultChecked={false} value={`${index}`} />
+              <RadioGroupItem defaultChecked={selected} value={`${index}`} />
               <Label
-                htmlFor="option-one"
+                htmlFor={`${index}`}
                 className="whitespace-normal  text-lg font-normal leading-normal text-black hover:border-b-2 hover:border-pink-600 lg:text-2xl"
               >
                 {text}
