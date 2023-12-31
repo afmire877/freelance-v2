@@ -45,6 +45,8 @@ export default function Info() {
       return;
     }
     const values = getValues();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     values.marketingConsent = values?.marketingConsent === "on" ? true : false;
     setUser(values);
     await router.push("/quiz");

@@ -2,6 +2,7 @@ import useQuizStore from "~/store/quizStore";
 
 interface Props {
   question: string;
+  confidenceValue?: number;
 }
 export const scale = {
   "Very Confident": 10,

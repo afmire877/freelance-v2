@@ -1,7 +1,6 @@
-import { type ContentfulClientApi, createClient } from "contentful";
+import { createClient, type ContentfulClientApi } from "contentful";
 
 import { type QuestionGroup } from "~/model/question";
-import { BLOCKS, MARKS } from "@contentful/rich-text-types";
 
 const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE ?? "";
 

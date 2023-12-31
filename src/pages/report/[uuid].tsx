@@ -8,7 +8,6 @@ import {
 } from "../../components/ui/accordion";
 
 import { groupWith } from "ramda";
-import { mockdata } from "~/components/mockdata";
 import {
   Chart as ChartJS,
   Filler,
@@ -25,7 +24,7 @@ import Spinner from "~/components/Spinner";
 import { api } from "~/utils/api";
 import { type Result } from "../result";
 import { Badge } from "~/components/ui/badge";
-import { QuestionTypes } from "~/model/question";
+import { QuestionTypes, type QuestionGroup } from "~/model/question";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { options } from "~/utils/contentful";
 
@@ -53,7 +52,7 @@ export default function Dashboard() {
     { uuid: params?.uuid },
     { enabled: Boolean(params?.uuid) },
   );
-  const [grouped, setGrouped] = useState([]);
+  const [grouped, setGrouped] = useState<Record<string, QuestionGroup[]>>({});
   const [chartData, setChartData] = useState({
     confidence: [0, 0, 0, 0, 0, 0],
     competence: [0, 0, 0, 0, 0, 0],
@@ -73,7 +72,7 @@ export default function Dashboard() {
       acc[cur[0].fields.topic] = cur;
 
       return acc;
-    }, {});
+    }, {}) as Record<string, QuestionGroup[]>;
 
     setGrouped(g);
     const resultByTopic = (topic, type: "confidence" | "competence") => {
@@ -126,11 +125,7 @@ export default function Dashboard() {
               here are your quiz results and answers:
             </span>
           </div>
-          <Accordion
-            type="multiple"
-            collapsible
-            className=" w-full max-xl:w-[1000px]  "
-          >
+          <Accordion type="multiple" className=" w-full max-xl:w-[1000px]  ">
             {Object.entries(grouped)
               .reverse()
               .map(([topic, value], idx) => {
@@ -140,12 +135,14 @@ export default function Dashboard() {
                       {topic}
                     </AccordionTrigger>
                     <AccordionContent className="tr w-full  text-xl">
+                      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                      {/* @ts-ignore */}
                       {value?.map((item, idx) => {
                         return (
                           <>
                             {" "}
                             <AccordionItem
-                              key={item.sys.id}
+                              key={item?.sys?.id}
                               value={item.sys.id}
                             >
                               <AccordionTrigger className="py-2 text-left text-pink-400 ">
@@ -155,8 +152,9 @@ export default function Dashboard() {
                               </AccordionTrigger>
                               <AccordionContent className="">
                                 Answer:{" "}
-                                {scale[item.fields.confidenceValue] ??
-                                  `${item.fields.confidenceValue}/10`}
+                                {item?.fields?.confidenceValue
+                                  ? scale[item?.fields?.confidenceValue]
+                                  : `${item.fields.confidenceValue}/10`}
                               </AccordionContent>
                             </AccordionItem>
                             {item.fields.questions.map((q) => {
@@ -168,17 +166,22 @@ export default function Dashboard() {
                                   </AccordionTrigger>
 
                                   <AccordionContent className="text-left text-pink-400">
-                                    {documentToReactComponents(
-                                      q?.fields?.choiceQuestion,
-                                      options,
-                                    )}
+                                    {q?.fields?.choiceQuestion &&
+                                      documentToReactComponents(
+                                        q?.fields?.choiceQuestion,
+                                        options,
+                                      )}
                                     <div key={idx} className="text-black">
-                                      {q?.text ?? "No answer"}
+                                      {q?.fields.choiceQuestionValue ??
+                                        "No answer"}
                                     </div>
                                   </AccordionContent>
                                 </AccordionItem>
                               ) : (
-                                <AccordionItem key={q.sys.id} value={q.sys.id}>
+                                <AccordionItem
+                                  key={q?.sys.id}
+                                  value={q?.sys.id}
+                                >
                                   <AccordionTrigger className="py-2 text-left text-pink-400">
                                     {q.fields.question}{" "}
                                     <Badge>{item.fields.subTopic}</Badge>

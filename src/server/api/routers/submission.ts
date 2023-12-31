@@ -4,9 +4,10 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
 import { profiles, submissions } from "~/server/db/schema";
+import { type User } from "~/store/userStore";
 
 export const submissionRouter = createTRPCRouter({
-  create: publicProcedure.input(z.any()).mutation(async ({ ctx, input }) => {
+  create: publicProcedure.input(z.any()).mutation(async ({ input }) => {
     const partialSubmission = input?.result
       .map((item) => {
         return {
@@ -16,7 +17,9 @@ export const submissionRouter = createTRPCRouter({
       .reduce((acc, item) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-expect-error
-        const [key, value] = Object.entries(item)[0];
+        const [key, value] = Object.entries(
+          item as Array<Record<string, number>>,
+        )[0];
         acc[key] = value;
 
         return acc;
@@ -39,7 +42,7 @@ export const submissionRouter = createTRPCRouter({
     if (!found) {
       const [profile] = await db
         .insert(profiles)
-        .values(input?.user)
+        .values(input?.user as User)
         .returning()
         .execute();
       values.profileId = profile?.id;
@@ -54,7 +57,7 @@ export const submissionRouter = createTRPCRouter({
   }),
   get: publicProcedure
     .input(z.object({ uuid: z.string() }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const [found] = await db
         .select()
         .from(submissions)
