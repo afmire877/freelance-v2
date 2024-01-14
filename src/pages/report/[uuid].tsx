@@ -103,7 +103,7 @@ export default function Dashboard() {
   return (
     <div className="mx-auto max-w-md  font-inter md:max-w-full">
       <div className="w-full self-center whitespace-nowrap p-4 text-center text-3xl font-medium text-black  md:mx-6  md:my-10 md:pt-12 lg:text-5xl ">
-        Intro to Freelance Quiz{" "}
+        Freelance Quiz Report{" "}
       </div>
       <div className="md:flex">
         <div className="flex flex-col md:mx-10 md:shrink-0 md:py-20">
@@ -113,7 +113,7 @@ export default function Dashboard() {
           />
         </div>
         <div className="p-8">
-          <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
+          <div className=" mt-6 text-3xl  leading-8 text-black md:pb-4">
             <span className="text-black">Hello </span>
             <span className="text-pink-600">{user?.name}, </span>
             <span className="text-black">
@@ -121,48 +121,60 @@ export default function Dashboard() {
             </span>
           </div>
           <div>
-            <div className="mt-6 text-3xl leading-8 text-black md:pb-4">
-              <div className="mb-4  text-black">Summary of Results: </div>
-              <div className="text-base">
-                <div>Confidence = 💪</div>
-                <div>Competence = 🏆</div>
+            <div className="mt-6  leading-8 text-black md:pb-4">
+              <div className="mb-4  text-3xl text-black">
+                Summary of Results:{" "}
               </div>
-              <span className="text-pink-600">
-                {result.map(
-                  (
-                    {
-                      topic,
-                      breakdown,
-                      overallResult: { competence, confidence },
-                    },
-                    idx,
-                  ) => {
-                    const t = Object.entries(breakdown)?.map(
-                      ([subtopic, { confidence, competence }], idx) => {
-                        if (subtopic === "undefined") return null;
-
-                        return (
-                          <p key={idx}>
-                            {subtopic}: 💪 - {confidence.percentage}, 🏆 -{" "}
-                            {competence.percentage}
-                          </p>
-                        );
+              <span className="">
+                {result
+                  .filter(
+                    (result, index, array) =>
+                      array.findIndex((t) => t.topic == result.topic) == index,
+                  )
+                  .map(
+                    (
+                      {
+                        topic,
+                        breakdown,
+                        overallResult: { competence, confidence },
                       },
-                    );
+                      idx,
+                    ) => {
+                      return (
+                        <p key={idx} className="py-5 text-base">
+                          <h3 className="text-lg font-black text-pink-600">
+                            {topic}:
+                          </h3>
+                          <div className="">
+                            {Object.entries(breakdown)?.map(
+                              ([subtopic, { confidence, competence }], idx) => {
+                                if (subtopic === "undefined") return null;
 
-                    return (
-                      <p key={idx} className="text-base">
-                        Overall {topic}: conf - {competence.score} (
-                        {competence.percentage}%), comp - {confidence.score} (
-                        {confidence.percentage}%)
-                        <div className="p-5">{t}</div>
-                      </p>
-                    );
-                  },
-                )}
+                                return (
+                                  <p key={idx} className="py-1">
+                                    <span className="font-bold">
+                                      {subtopic}
+                                    </span>
+                                    :{" "}
+                                    <span className="mr-2 inline-flex items-center rounded-md bg-pink-50 px-2 py-1 text-xs font-medium text-pink-700 ring-1 ring-inset ring-pink-700/10">
+                                      Confidence ({confidence.percentage}%)
+                                    </span>
+                                    <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                                      Competence ({competence.percentage}%)
+                                    </span>
+                                  </p>
+                                );
+                              },
+                            )}
+                          </div>
+                        </p>
+                      );
+                    },
+                  )}
               </span>
             </div>
           </div>
+          <h2 className="my-5 text-3xl ">Here is a snapshot of the answers:</h2>
           <Accordion type="multiple" className=" w-full max-xl:w-[1000px]  ">
             {Object.entries(grouped)
               .reverse()
@@ -170,7 +182,7 @@ export default function Dashboard() {
                 return (
                   <AccordionItem key={idx} value={`${idx}`}>
                     <AccordionTrigger className="md:4xl text-2xl font-medium">
-                      {topic} - {}
+                      {topic}
                     </AccordionTrigger>
                     <AccordionContent className="tr w-full  text-xl">
                       {value?.map((item, idx) => {
