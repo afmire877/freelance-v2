@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState, type FormEvent, useEffect } from "react";
+import { type FormEvent } from "react";
 import { QuestionTypes } from "~/model/question";
 import useQuizStore from "~/store/quizStore";
 import ArrowLeft from "../assets/arrow-left.svg";
@@ -10,14 +10,20 @@ import RadioQuestion from "./RadioQuestion";
 import ScaleQuestion from "./ScaleQuestion";
 import { TextBox } from "./TextBox";
 import { Badge } from "./ui/badge";
+import { calculateResult } from "~/utils/calculate-result";
+import { api } from "~/utils/api";
+import useUserStore from "~/store/userStore";
 
 export default function Step() {
   const router = useRouter();
+  const user = useUserStore((state) => state.user);
+  const setResult = useUserStore((s) => s.setResult);
   const currentIndex = useQuizStore((state) => state.currentIndex);
   const step = useQuizStore((state) => state.step);
   const setStep = useQuizStore((state) => state.setStep);
   const setCurrentIndex = useQuizStore((state) => state.setCurrentIndex);
   const bank = useQuizStore((state) => state.bank);
+  const mutation = api.submission.create.useMutation();
 
   const isFirst = currentIndex === 0 && step === 0;
 
@@ -26,7 +32,7 @@ export default function Step() {
   const {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    fields: { confidenceQuestion, questions, confidenceValue },
+    fields: { confidenceQuestion, questions, confidenceValue, topic, subtopic },
   } = bank?.[currentIndex];
 
   const list = [
@@ -45,7 +51,14 @@ export default function Step() {
     if (list.length - 1 !== step) return setStep(step + 1);
 
     if (list.length - 1 === step && isLastQuestion) {
-      await router.push("/result");
+      const result = calculateResult(bank);
+
+      if (!result) return;
+
+      setResult(result);
+
+      const data = await mutation.mutateAsync({ result, user, answers: bank });
+      await router.push(`/result/${data?.uuid}`);
       return;
     }
 
@@ -65,25 +78,27 @@ export default function Step() {
   return (
     <div className="fle flex h-full flex-col justify-between">
       <div className="">
-        <div>
-          <Badge>
-            {step + 1}/{list.length}
-          </Badge>
+        <div className="mt-2 flex">
+          {topic && <Badge>{topic}</Badge>}
+          {subtopic && <Badge className="ml-2">{subtopic}</Badge>}
         </div>
         {list.map((item, idx) => {
+          const { type } = item;
           if (idx !== step) return null;
-          if (item.type === QuestionTypes.CONFIDENCE) {
+
+          if (type === QuestionTypes.CONFIDENCE) {
             return <ScaleQuestion key={idx} {...item} />;
           }
 
-          if (item.type === QuestionTypes.COMPETENCE) {
+          if (type === QuestionTypes.COMPETENCE) {
             return item?.singleAnswer ? (
               <RadioQuestion {...item} />
             ) : (
               <ChecklistQuestion {...item} />
             );
           }
-          if (item.type === QuestionTypes.CHOICE) return <TextBox {...item} />;
+          if (type === QuestionTypes.CHOICE) return <TextBox {...item} />;
+
           return null;
         })}
       </div>

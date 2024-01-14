@@ -19,10 +19,10 @@ export function TextBox({
 
   return (
     <div className="mt-10 flex  flex-col items-start font-inter ">
-      <div className=" ml-3 w-full text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5  md:text-4xl  ">
+      <div className="w-full text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5  md:text-4xl  ">
         {documentToReactComponents(question, options)}
       </div>
-      <div className="lg:text-1xl ml-3.5 mt-5 self-start text-lg text-black">
+      <div className="lg:text-1xl mt-5 self-start text-lg text-black">
         Use the text box below to answer...
       </div>
 

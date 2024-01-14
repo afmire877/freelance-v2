@@ -8,27 +8,14 @@ import { type User } from "~/store/userStore";
 
 export const submissionRouter = createTRPCRouter({
   create: publicProcedure.input(z.any()).mutation(async ({ input }) => {
-    const partialSubmission = input?.result
-      .map((item) => {
-        return {
-          [`${item.topic.toLowerCase()}Percentage`]: item.competence.percentage,
-        };
-      })
-      .reduce((acc, item) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
-        const [key, value] = Object.entries(
-          item as Array<Record<string, number>>,
-        )[0];
-        acc[key] = value;
-
-        return acc;
-      }, {});
-
-    const values = {
+    const values: {
+      answers: unknown;
+      score: unknown;
+      profileId?: number;
+    } = {
       answers: input?.answers,
       score: input?.result,
-      ...partialSubmission,
+      profileId: 0,
     };
 
     const [found] = await db
@@ -50,10 +37,14 @@ export const submissionRouter = createTRPCRouter({
       values.profileId = found.id;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    await db.insert(submissions).values(values).execute();
+    const [doc] = await db
+      .insert(submissions)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      .values(values)
+      .returning()
+      .execute();
 
-    return true;
+    return doc;
   }),
   get: publicProcedure
     .input(z.object({ uuid: z.string() }))

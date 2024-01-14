@@ -10,7 +10,6 @@ import { ErrorMessage } from "@hookform/error-message";
 
 import { useRouter } from "next/router";
 import { Checkbox } from "~/components/ui/checkbox";
-import { useSearchParams } from "next/navigation";
 import { useQuestions } from "~/hooks/useQuestions";
 
 export default function Info() {
@@ -23,7 +22,6 @@ export default function Info() {
   } = useForm<User>({ mode: "onBlur" });
   const router = useRouter();
   const { toast } = useToast();
-  const { getAll } = useSearchParams();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,10 +35,10 @@ export default function Info() {
       !getValues().desiredRevenue ||
       !getValues().marketingConsent
     ) {
-      // toast({
-      //   variant: "destructive",
-      //   title: "Please fill in all the fields.",
-      // });
+      toast({
+        variant: "destructive",
+        title: "Please fill in all the fields.",
+      });
 
       return;
     }
@@ -178,7 +176,7 @@ export default function Info() {
           <label>Tick to sign up to our newsletters</label>
         </div>
         <div className="mb-2  mt-2 flex w-[331px] max-w-full flex-col  lg:w-[800px]">
-          <StyledButton type="submit" label="Continue" />
+          <StyledButton type="submit" label="Continue" onClick={handleSubmit} />
           <div className="mt-1 flex w-[282px] max-w-full items-start justify-between gap-10 self-center lg:mt-3 lg:w-[800px]">
             <Image
               loading="lazy"

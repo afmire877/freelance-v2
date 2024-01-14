@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "../../components/ui/accordion";
 
-import { groupWith } from "ramda";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import {
   Chart as ChartJS,
   Filler,
@@ -19,14 +19,14 @@ import {
 } from "chart.js";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
+import { groupWith } from "ramda";
 import Chart from "~/components/Chart";
 import Spinner from "~/components/Spinner";
-import { api } from "~/utils/api";
-import { type Result } from "../result";
 import { Badge } from "~/components/ui/badge";
 import { QuestionTypes, type QuestionGroup } from "~/model/question";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { api } from "~/utils/api";
 import { options } from "~/utils/contentful";
+import { resultByTopic, type Result } from "~/utils/calculate-result";
 
 ChartJS.register(
   RadialLinearScale,
@@ -58,7 +58,7 @@ export default function Dashboard() {
     competence: [0, 0, 0, 0, 0, 0],
   });
 
-  const score = data?.submission.score as unknown as Result[];
+  const result = data?.submission.score as unknown as Result[];
   const user = data?.profiles;
 
   useEffect(() => {
@@ -75,35 +75,30 @@ export default function Dashboard() {
     }, {}) as Record<string, QuestionGroup[]>;
 
     setGrouped(g);
-    const resultByTopic = (topic, type: "confidence" | "competence") => {
-      return score.find((r) => r.topic === topic)?.[type].percentage ?? 0;
-    };
 
     setChartData({
       confidence: [
-        resultByTopic("Sales", "confidence"),
-        resultByTopic("Marketing", "confidence"),
-        resultByTopic("Finance", "confidence"),
-        resultByTopic("Legal", "confidence"),
-        resultByTopic("Admin", "confidence"),
-        resultByTopic("Portfolio", "confidence"),
+        resultByTopic(result, "Sales", "confidence"),
+        resultByTopic(result, "Marketing", "confidence"),
+        resultByTopic(result, "Finance", "confidence"),
+        resultByTopic(result, "Legal", "confidence"),
+        resultByTopic(result, "Admin", "confidence"),
+        resultByTopic(result, "Portfolio", "confidence"),
       ],
       competence: [
-        resultByTopic("Sales", "competence"),
-        resultByTopic("Marketing", "competence"),
-        resultByTopic("Finance", "competence"),
-        resultByTopic("Legal", "competence"),
-        resultByTopic("Admin", "competence"),
-        resultByTopic("Portfolio", "competence"),
+        resultByTopic(result, "Sales", "competence"),
+        resultByTopic(result, "Marketing", "competence"),
+        resultByTopic(result, "Finance", "competence"),
+        resultByTopic(result, "Legal", "competence"),
+        resultByTopic(result, "Admin", "competence"),
+        resultByTopic(result, "Portfolio", "competence"),
       ],
     });
-  }, [score, data?.submission.answers]);
+  }, [result, data?.submission.answers]);
 
   if (isLoading) return <Spinner />;
 
   if (error) return router.push("/404");
-
-  console.log(grouped);
 
   return (
     <div className="mx-auto max-w-md  font-inter md:max-w-full">
@@ -125,6 +120,49 @@ export default function Dashboard() {
               here are your quiz results and answers:
             </span>
           </div>
+          <div>
+            <div className="mt-6 text-3xl leading-8 text-black md:pb-4">
+              <div className="mb-4  text-black">Summary of Results: </div>
+              <div className="text-base">
+                <div>Confidence = 💪</div>
+                <div>Competence = 🏆</div>
+              </div>
+              <span className="text-pink-600">
+                {result.map(
+                  (
+                    {
+                      topic,
+                      breakdown,
+                      overallResult: { competence, confidence },
+                    },
+                    idx,
+                  ) => {
+                    const t = Object.entries(breakdown)?.map(
+                      ([subtopic, { confidence, competence }], idx) => {
+                        if (subtopic === "undefined") return null;
+
+                        return (
+                          <p key={idx}>
+                            {subtopic}: 💪 - {confidence.percentage}, 🏆 -{" "}
+                            {competence.percentage}
+                          </p>
+                        );
+                      },
+                    );
+
+                    return (
+                      <p key={idx} className="text-base">
+                        Overall {topic}: conf - {competence.score} (
+                        {competence.percentage}%), comp - {confidence.score} (
+                        {confidence.percentage}%)
+                        <div className="p-5">{t}</div>
+                      </p>
+                    );
+                  },
+                )}
+              </span>
+            </div>
+          </div>
           <Accordion type="multiple" className=" w-full max-xl:w-[1000px]  ">
             {Object.entries(grouped)
               .reverse()
@@ -132,15 +170,12 @@ export default function Dashboard() {
                 return (
                   <AccordionItem key={idx} value={`${idx}`}>
                     <AccordionTrigger className="md:4xl text-2xl font-medium">
-                      {topic}
+                      {topic} - {}
                     </AccordionTrigger>
                     <AccordionContent className="tr w-full  text-xl">
-                      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                      {/* @ts-ignore */}
                       {value?.map((item, idx) => {
                         return (
                           <>
-                            {" "}
                             <AccordionItem
                               key={item?.sys?.id}
                               value={item.sys.id}

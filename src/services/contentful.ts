@@ -3,8 +3,8 @@ import { createClient, type ContentfulClientApi } from "contentful";
 import { type QuestionGroup } from "~/model/question";
 
 const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE ?? "";
-
-const isProd = process.env.NODE_ENV === "production";
+// const isProd = process.env.NODE_ENV === "production";
+const isProd = true;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let client: ContentfulClientApi<any>;

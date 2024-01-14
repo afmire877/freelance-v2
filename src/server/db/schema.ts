@@ -25,13 +25,6 @@ export const submissions = pgTable("submission", {
   }),
   score: json("score").$type<Result[]>().default([]),
 
-  salesPercentage: integer("salesPercentage").default(0),
-  portfolioPercentage: integer("portfolioPercentage").default(0),
-  marketingPercentage: integer("marketingPercentage").default(0),
-  financePercentage: integer("financePercentage").default(0),
-  legalPercentage: integer("legalPercentage").default(0),
-  adminPercentage: integer("adminPercentage").default(0),
-
   overallScore: varchar("overallScore").default("0"),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)

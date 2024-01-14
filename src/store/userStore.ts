@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import { type Result } from "@/utils/calculate-result";
 
 export type User = {
   name: string;
@@ -21,6 +22,8 @@ export type User = {
 interface State {
   user: User;
   setUser: (user: User) => void;
+  result: Result[] | undefined;
+  setResult: (result: Result[] | undefined) => void;
 }
 
 const useUserStore = create<State>()((set) => ({
@@ -44,6 +47,8 @@ const useUserStore = create<State>()((set) => ({
         },
       };
     }),
+  result: [],
+  setResult: (result) => set(() => ({ result })),
 }));
 
 if (process.env.NODE_ENV === "development") {
