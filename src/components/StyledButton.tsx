@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { type FormEvent, type MouseEventHandler } from "react";
 import ArrowButton from "../assets/button.svg";
-interface IStyledButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface IStyledButton
+  extends React.ButtonHTMLAttributes<HTMLButtonElement | HTMLFormElement> {
   label: string;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export default function StyledButton({

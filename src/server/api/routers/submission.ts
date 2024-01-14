@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { type InferInsertModel, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -8,11 +8,7 @@ import { type User } from "~/store/userStore";
 
 export const submissionRouter = createTRPCRouter({
   create: publicProcedure.input(z.any()).mutation(async ({ input }) => {
-    const values: {
-      answers: unknown;
-      score: unknown;
-      profileId?: number;
-    } = {
+    const values: InferInsertModel<typeof submissions> = {
       answers: input?.answers,
       score: input?.result,
       profileId: 0,
@@ -39,7 +35,6 @@ export const submissionRouter = createTRPCRouter({
 
     const [doc] = await db
       .insert(submissions)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .values(values)
       .returning()
       .execute();
