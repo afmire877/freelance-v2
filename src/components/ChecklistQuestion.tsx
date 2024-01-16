@@ -30,7 +30,7 @@ export default function ChecklistQuestion({
         {question}
       </h1>
       <div className="mt-6 ">
-        {checklist?.map(({ fields: { text, selected } }, idx) => {
+        {checklist?.map(({ fields }, idx) => {
           return (
             <div
               key={idx}
@@ -38,7 +38,7 @@ export default function ChecklistQuestion({
             >
               <Checkbox
                 id={`checklist-${idx}`}
-                defaultChecked={selected}
+                defaultChecked={fields?.selected ?? false}
                 onCheckedChange={() => {
                   const newValue = value.map((choice, index) =>
                     idx === index ? !choice : choice,
@@ -58,7 +58,7 @@ export default function ChecklistQuestion({
                   htmlFor={`checklist-${idx}`}
                   className="whitespace-normal text-lg font-normal leading-normal  text-black hover:border-b-2 hover:border-pink-600  peer-disabled:cursor-not-allowed peer-disabled:opacity-70 lg:text-2xl"
                 >
-                  {text}
+                  {fields?.text ?? ""}
                 </label>
               </div>
             </div>
