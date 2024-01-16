@@ -237,7 +237,7 @@ export default function Dashboard() {
                                   <AccordionContent className="">
                                     {q.fields.competenceChecklist
                                       ?.filter(({ fields }) =>
-                                        Boolean(fields.selected),
+                                        Boolean(fields?.selected),
                                       )
                                       ?.map((obj, idx) => {
                                         return (
