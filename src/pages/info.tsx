@@ -156,12 +156,20 @@ export default function Info() {
           <option value="100+">100,000+</option>
         </select>
         <div className="mt-5 text-xl text-black">I would like to earn ...</div>
-        <input
+        <select
+          className="mt-1.5 w-full grow border border-solid border-[color:var(--GGH\_navy,#050325)] bg-white py-3.5 pl-2 pr-5 text-sm text-black text-opacity-50"
           required={true}
-          {...register("desiredRevenue", { required: false })}
-          className="mt-2.5 w-full border border-solid border-[color:var(--GGH\_navy,#050325)] bg-white py-3.5 pl-2 pr-5 text-sm text-black text-opacity-50"
-          placeholder="Type your desired earning here..."
-        />
+          {...register("desiredRevenue", { required: true })}
+        >
+          <option value="">I earn approx .... per year</option>
+          <option value="10-20">10,000 - 20,000</option>
+          <option value="20-40">20,000 - 40,000</option>
+          <option value="40-60">40,000 - 60,000</option>
+          <option value="60-80">60,000 - 80,000</option>
+          <option value="80-100">80,000 - 100,000</option>
+          <option value="100+">100,000+</option>
+          <option value="100+">200,000+</option>
+        </select>
         {/* <input
           required={true}
           {...register("name", { required: true })}

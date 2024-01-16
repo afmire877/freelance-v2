@@ -88,14 +88,7 @@ export default function Result() {
         </div>
 
         <div className="my-20 w-full">
-          <p className="my-10 w-full ">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloribus
-            quaerat aspernatur, eos aliquam laboriosam rerum unde officia eum et
-            modi consequuntur harum maiores. Eaque asperiores, nostrum magni
-            quidem quas incidunt sunt mollitia sit harum fugiat sapiente quasi,
-            iusto quae error veniam laboriosam, nam soluta odio totam cumque.
-            Quod, tenetur architecto.
-          </p>
+          <p className="my-10 w-full ">Summary of Results:</p>
           <TopicScore />
           <div className="my-10">
             <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
