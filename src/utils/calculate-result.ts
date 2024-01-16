@@ -70,7 +70,7 @@ export const resultByTopic = (
 
 const calculateScore = (g) => {
   const confidenceNumber = g.reduce((acc, cur) => {
-    const value = cur?.fields.confidenceValue ?? 0;
+    const value = cur?.fields?.confidenceValue ?? 0;
     return acc + value;
   }, 0);
 
@@ -82,8 +82,8 @@ const calculateScore = (g) => {
     if (!found) return acc;
 
     const weighting = found.competenceChecklist
-      .filter((c) => c.fields.selected)
-      .map((c) => c.fields.weighting);
+      .filter((c) => c.fields?.selected)
+      .map((c) => c.fields?.weighting);
 
     const count = sum(weighting);
 
