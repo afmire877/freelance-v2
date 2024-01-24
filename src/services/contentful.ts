@@ -26,12 +26,11 @@ if (typeof window !== "undefined") {
 }
 
 export const getQuestions = async () => {
-  const questions = await client?.getEntries({
-    content_type: "questionBank",
-    include: 3,
+  const questions = await client?.getEntry("3aDWPrYSc94kS8WKNm3b2z", {
+    include: 4,
   });
 
   if (questions === undefined) throw new Error("Questions not found");
 
-  return questions.items as unknown as QuestionGroup[];
+  return questions.fields.questions as unknown as QuestionGroup[];
 };

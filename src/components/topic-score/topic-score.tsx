@@ -42,7 +42,7 @@ export const TopicScore: React.FC<TopicScoreProps> = ({ className = "" }) => {
                     competence.score / (competence.percentage / 100);
                   const id = `${subtopic}-${idx}`;
 
-                  const needsImprovement = competence.percentage < 50;
+                  const needsImprovement = competence.percentage < 90;
                   return (
                     <AccordionItem
                       key={idx}
