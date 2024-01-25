@@ -54,6 +54,7 @@ export const profiles = pgTable("profiles", {
   revenue: varchar("revenue", { length: 256 }),
   desiredRevenue: varchar("desiredRevenue", { length: 256 }),
   marketingConsent: boolean("marketingConsent").default(false),
+  acceptedTOS: boolean("acceptedTOS").default(false),
   submittableId: varchar("submittableId").unique(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)

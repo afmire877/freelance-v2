@@ -1,30 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import Image from "next/image";
-import StyledButton from "~/components/StyledButton";
-import GGH from "../assets/ggh.svg";
-import LocalChamp from "../assets/localChampions.svg";
-import useUserStore, { type User } from "~/store/userStore";
-import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { ErrorMessage } from "@hookform/error-message";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import StyledButton from "~/components/StyledButton";
+import { type User } from "~/store/userStore";
+import GGH from "../assets/ggh.svg";
+import LocalChamp from "../assets/localChampions.svg";
 
-import { useRouter } from "next/router";
 import { Checkbox } from "~/components/ui/checkbox";
 import { useQuestions } from "~/hooks/useQuestions";
-import { type FormEvent } from "react";
 
 export default function Info() {
-  const setUser = useUserStore((state) => state.setUser);
   const response = useQuestions();
   const {
     register,
     getValues,
     formState: { errors },
   } = useForm<User>({ mode: "onBlur" });
-  const router = useRouter();
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
       !getValues().name ||
@@ -34,7 +30,8 @@ export default function Info() {
       !getValues().borough ||
       !getValues().revenue ||
       !getValues().desiredRevenue ||
-      !getValues().marketingConsent
+      !getValues().marketingConsent ||
+      !getValues().acceptedTOS
     ) {
       toast({
         variant: "destructive",
@@ -43,12 +40,6 @@ export default function Info() {
 
       return;
     }
-    const values = getValues();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    values.marketingConsent = values?.marketingConsent === "on" ? true : false;
-    setUser(values);
-    await router.push("/quiz");
   };
 
   return (
@@ -70,16 +61,6 @@ export default function Info() {
           placeholder="Type your name here..."
         />
 
-        {/* <div className="my-3">
-          <Checkbox
-            {...register("isFreelancer", { required: true })}
-            className="mr-2"
-          />
-          <label>
-            Do you have experience as a freelancer in either Creative, Cultural
-            or Tech sectors *
-          </label>
-        </div> */}
         <div className="mt-4 text-xl text-black">Date of Birth</div>
         <input
           // / must be 18 to 30 to take the quiz
@@ -170,20 +151,28 @@ export default function Info() {
           <option value="100+">100,000+</option>
           <option value="100+">200,000+</option>
         </select>
-        {/* <input
-          required={true}
-          {...register("name", { required: true })}
-          className="mt-2.5 w-full border border-solid border-[color:var(--GGH\_navy,#050325)] bg-white py-3.5 pl-2 pr-5 text-sm text-black text-opacity-50"
-          placeholder="Type your name here..."
-        /> */}
 
+        <div className="my-3">
+          <Checkbox
+            {...register("acceptedTOS", { required: true })}
+            className="mr-2"
+          />
+          <label>
+            I have read and agree to the privacy policy, terms of service and
+            community guidelines
+          </label>
+        </div>
         <div className="my-3">
           <Checkbox
             {...register("marketingConsent", { required: true })}
             className="mr-2"
           />
-          <label>Tick to sign up to our newsletters</label>
+          <label>
+            I would like to receive news about Local Champions and Good Growth
+            Hub
+          </label>
         </div>
+
         <div className="mb-2  mt-2 flex w-[331px] max-w-full flex-col  lg:w-[800px]">
           <StyledButton
             type="submit"

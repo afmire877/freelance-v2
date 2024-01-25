@@ -17,6 +17,7 @@ export type User = {
     | "Redbridge"
     | "Tower Hamlets"
     | "Waltham Forest";
+  acceptedTOS: boolean;
 };
 
 interface State {
