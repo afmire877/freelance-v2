@@ -140,10 +140,14 @@ export default function Dashboard() {
                       },
                       idx,
                     ) => {
+                      if (!topic) return null;
                       return (
                         <p key={idx} className="py-5 text-base">
                           <h3 className="text-lg font-black text-pink-600">
-                            {topic}:
+                            {topic}:{" "}
+                            <span className="font-light italic">
+                              Overall Score {competence.percentage.toFixed()}%{" "}
+                            </span>{" "}
                           </h3>
                           <div className="">
                             {Object.entries(breakdown)?.map(
@@ -179,6 +183,7 @@ export default function Dashboard() {
             {Object.entries(grouped)
               .reverse()
               .map(([topic, value], idx) => {
+                if (topic === "undefined") return null;
                 return (
                   <AccordionItem key={idx} value={`${idx}`}>
                     <AccordionTrigger className="md:4xl text-2xl font-medium">
