@@ -97,7 +97,9 @@ export default function Result() {
           </div>
           <div className="flex justify-between gap-4 font-inter text-white">
             <div className="flex w-full items-center  justify-center bg-pink-500 p-10 text-center">
-              Contact Coach
+              <a href="https://calendly.com/localchampions/freelance-exchange">
+                Contact Coach
+              </a>
             </div>
             <a
               className="flex w-full items-center justify-center bg-pink-500 p-10"
