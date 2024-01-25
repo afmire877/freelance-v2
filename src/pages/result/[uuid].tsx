@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useQuizStore from "~/store/quizStore";
 
 import {
   Chart as ChartJS,
@@ -85,11 +84,7 @@ export default function Result() {
             competence={chartData.competence}
             confidence={chartData.confidence}
           />
-        </div>
 
-        <div className="my-20 w-full">
-          <p className="my-10 w-full ">Summary of Results:</p>
-          <TopicScore />
           <div className="my-10">
             <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
               <span className="text-black">Check out these resources:</span>
@@ -116,6 +111,11 @@ export default function Result() {
               </div>
             </a>
           </div>
+        </div>
+
+        <div className="my-20 w-full">
+          <p className="my-10 w-full text-3xl ">Summary of Results:</p>
+          <TopicScore />
         </div>
       </div>
     </div>
