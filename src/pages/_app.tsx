@@ -6,8 +6,10 @@ import "~/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@/components/ui/toaster";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
 
-const client = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
@@ -18,8 +20,21 @@ const client = new QueryClient({
 });
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  if (typeof window !== "undefined") {
+    const sessionStoragePersister = createSyncStoragePersister({
+      storage: window.sessionStorage,
+    });
+
+    persistQueryClient({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      queryClient,
+      persister: sessionStoragePersister,
+    });
+  }
+
   return (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <Component {...pageProps} />
       <Toaster />
       <ReactQueryDevtools />
