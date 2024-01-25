@@ -65,11 +65,11 @@ export default function Dashboard() {
     if (!data?.submission.answers) return;
     const g = groupWith(
       (a, b) => {
-        return a.fields.topic === b.fields.topic;
+        return a.fields?.topic === b.fields?.topic;
       },
       data?.submission.answers,
     ).reduce((acc, cur) => {
-      acc[cur[0].fields.topic] = cur;
+      acc[cur[0].fields?.topic] = cur;
 
       return acc;
     }, {}) as Record<string, QuestionGroup[]>;
@@ -194,14 +194,14 @@ export default function Dashboard() {
                             >
                               <AccordionTrigger className="py-2 text-left text-pink-400 ">
                                 Q{idx + 1}
-                                {") "} {item.fields.confidenceQuestion}
-                                <Badge>{item.fields.subTopic}</Badge>
+                                {") "} {item.fields?.confidenceQuestion}
+                                <Badge>{item.fields?.subTopic}</Badge>
                               </AccordionTrigger>
                               <AccordionContent className="">
                                 Answer:{" "}
                                 {item?.fields?.confidenceValue
                                   ? scale[item?.fields?.confidenceValue]
-                                  : `${item.fields.confidenceValue}/10`}
+                                  : `${item.fields?.confidenceValue}/10`}
                               </AccordionContent>
                             </AccordionItem>
                             {item.fields?.questions?.map((q) => {
@@ -209,7 +209,7 @@ export default function Dashboard() {
                                 <AccordionItem key={q.sys.id} value={q.sys.id}>
                                   <AccordionTrigger className="py-2 text-left text-pink-400">
                                     {q.fields?.question}
-                                    <Badge>{item.fields.subTopic}</Badge>
+                                    <Badge>{item.fields?.subTopic}</Badge>
                                   </AccordionTrigger>
 
                                   <AccordionContent className="text-left text-pink-400">
@@ -219,7 +219,7 @@ export default function Dashboard() {
                                         options,
                                       )}
                                     <div key={idx} className="text-black">
-                                      {q?.fields.choiceQuestionValue ??
+                                      {q?.fields?.choiceQuestionValue ??
                                         "No answer"}
                                     </div>
                                   </AccordionContent>
@@ -231,11 +231,11 @@ export default function Dashboard() {
                                 >
                                   <AccordionTrigger className="py-2 text-left text-pink-400">
                                     {q.fields?.question}{" "}
-                                    <Badge>{item.fields.subTopic}</Badge>
+                                    <Badge>{item.fields?.subTopic}</Badge>
                                   </AccordionTrigger>
 
                                   <AccordionContent className="">
-                                    {q.fields.competenceChecklist
+                                    {q.fields?.competenceChecklist
                                       ?.filter(({ fields }) =>
                                         Boolean(fields?.selected),
                                       )

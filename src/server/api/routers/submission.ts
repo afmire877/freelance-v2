@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { type InferInsertModel, eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -50,6 +51,14 @@ export const submissionRouter = createTRPCRouter({
         .where(eq(submissions.uuid, String(input?.uuid) ?? ""))
         .innerJoin(profiles, eq(profiles.id, submissions.profileId))
         .execute();
+
+      if (!found) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Submission not found",
+          cause: new Error("Submission not found"),
+        });
+      }
 
       return found;
     }),
