@@ -41,7 +41,10 @@ export default function Step() {
       question: confidenceQuestion,
       confidenceValue,
     },
-    ...questions.map((item) => ({ type: item.fields?.type, ...item.fields })),
+    ...(questions?.map((item) => ({
+      type: item.fields?.type,
+      ...item.fields,
+    })) ?? []),
   ];
 
   const handleNextBtn = async (e: FormEvent) => {
@@ -72,7 +75,7 @@ export default function Step() {
     if (step !== 0) return setStep(step - 1);
 
     setCurrentIndex(currentIndex - 1);
-    setStep(bank?.[currentIndex - 1]?.fields.questions.length ?? 0);
+    setStep(bank?.[currentIndex - 1]?.fields?.questions?.length ?? 0);
   };
 
   return (
@@ -106,7 +109,7 @@ export default function Step() {
         {!isFirst ? (
           <div
             onClick={handlePrevBtn}
-            className="flex items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
+            className="flex cursor-pointer items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
           >
             <Image src={ArrowLeft} alt="" height={20} width={20} />
             <div>Prev</div>
@@ -116,7 +119,7 @@ export default function Step() {
         )}
         <div
           onClick={handleNextBtn}
-          className="flex items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
+          className="flex cursor-pointer items-baseline gap-4 text-lg hover:border-b-2 hover:border-pink-600"
         >
           <div>Next</div>
           <Image src={ArrowRight} alt="" height={20} width={20} />

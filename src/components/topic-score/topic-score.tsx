@@ -40,6 +40,7 @@ export const TopicScore: React.FC<TopicScoreProps> = ({ className = "" }) => {
 
                   const scoreMax =
                     competence.score / (competence.percentage / 100);
+                  const hasSkipped = competence.score === 0;
                   const id = `${subtopic}-${idx}`;
 
                   const needsImprovement = competence.percentage < 90;
@@ -54,6 +55,7 @@ export const TopicScore: React.FC<TopicScoreProps> = ({ className = "" }) => {
                         className={classnames(
                           "md:4xl  bg-gray-100 px-4 py-8 text-2xl font-medium",
                           value === id ? "rounded-t-lg" : "rounded-lg",
+                          hasSkipped && "opacity-50",
                         )}
                         disabled={
                           !needsImprovement || improvement?.length === 0
@@ -62,20 +64,28 @@ export const TopicScore: React.FC<TopicScoreProps> = ({ className = "" }) => {
                         <div className="flex w-full flex-col">
                           <div className="flex w-full">
                             <p className="mr-10">{subtopic}</p>
-                            {needsImprovement && (
+                            {!hasSkipped && needsImprovement && (
                               <span className="hover:underline-transparent inline-flex items-center rounded-md bg-orange-50 px-2 py-1 text-xs font-medium text-orange-800 ring-1 ring-inset ring-orange-600/20 hover:no-underline">
                                 🔥 Needs improvement
                               </span>
                             )}
-                          </div>
 
-                          <div className="flex w-full flex-col ">
-                            <p className="mb-2 text-left text-sm font-light">
-                              {competence.score}/
-                              {!isNaN(scoreMax) ? scoreMax : 0}
-                            </p>
-                            <Progress value={competence.percentage} />
+                            {hasSkipped && (
+                              <span className="hover:underline-transparent inline-flex items-center rounded-md bg-orange-50 px-2 py-1 text-xs font-medium text-red-800 ring-1 ring-inset ring-red-600/20 hover:no-underline">
+                                ❌ Skipped
+                              </span>
+                            )}
                           </div>
+                          {!hasSkipped && (
+                            <div className="flex w-full flex-col ">
+                              <p className="mb-2 text-left text-sm font-light">
+                                {competence.score}/
+                                {!isNaN(scoreMax) ? scoreMax : 0}
+                              </p>
+
+                              <Progress value={competence.percentage} />
+                            </div>
+                          )}
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="rounded-b-lg  bg-gray-100 px-4 py-8">

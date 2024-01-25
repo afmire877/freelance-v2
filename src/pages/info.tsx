@@ -4,15 +4,18 @@ import { ErrorMessage } from "@hookform/error-message";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import StyledButton from "~/components/StyledButton";
-import { type User } from "~/store/userStore";
+import useUserStore, { type User } from "~/store/userStore";
 import GGH from "../assets/ggh.svg";
 import LocalChamp from "../assets/localChampions.svg";
 
 import { Checkbox } from "~/components/ui/checkbox";
 import { useQuestions } from "~/hooks/useQuestions";
+import { useRouter } from "next/router";
 
 export default function Info() {
   const response = useQuestions();
+  const setUser = useUserStore((s) => s.setUser);
+  const router = useRouter();
   const {
     register,
     getValues,
@@ -20,8 +23,9 @@ export default function Info() {
   } = useForm<User>({ mode: "onBlur" });
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("responseclicknisb");
     if (
       !getValues().name ||
       !getValues().dateOfBirth ||
@@ -30,7 +34,6 @@ export default function Info() {
       !getValues().borough ||
       !getValues().revenue ||
       !getValues().desiredRevenue ||
-      !getValues().marketingConsent ||
       !getValues().acceptedTOS
     ) {
       toast({
@@ -40,6 +43,12 @@ export default function Info() {
 
       return;
     }
+    const values = getValues();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    values.marketingConsent = values?.marketingConsent === "on" ? true : false;
+    setUser(values);
+    await router.push("/quiz");
   };
 
   return (
@@ -163,10 +172,7 @@ export default function Info() {
           </label>
         </div>
         <div className="my-3">
-          <Checkbox
-            {...register("marketingConsent", { required: true })}
-            className="mr-2"
-          />
+          <Checkbox {...register("marketingConsent")} className="mr-2" />
           <label>
             I would like to receive news about Local Champions and Good Growth
             Hub

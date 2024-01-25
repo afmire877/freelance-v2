@@ -75,7 +75,7 @@ const calculateScore = (g) => {
   }, 0);
 
   const compNumber = g.reduce((acc, cur) => {
-    const found = cur?.fields.questions.find(
+    const found = cur?.fields?.questions?.find(
       ({ fields }) => fields?.type === QuestionTypes.COMPETENCE,
     )?.fields;
 
@@ -101,9 +101,9 @@ const calculateScore = (g) => {
       score: compNumber,
       percentage: (compNumber / (g.length * 10)) * 100,
     },
-    improvement: g[0]?.fields.questions
+    improvement: (g[0]?.fields.questions ?? [])
       .map((q) => {
-        if (q.fields.type === QuestionTypes.COMPETENCE) {
+        if (q.fields?.type === QuestionTypes.COMPETENCE) {
           return q.fields.competenceChecklist
             .map((c) => c.fields?.improvement)
             .filter(Boolean);

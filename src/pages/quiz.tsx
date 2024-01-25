@@ -4,5 +4,9 @@ import { useQuestions } from "~/hooks/useQuestions";
 
 export default function QuizPage() {
   const _ = useQuestions();
-  return <Form />;
+  return (
+    <div className="mx-auto max-w-7xl">
+      <Form />
+    </div>
+  );
 }

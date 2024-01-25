@@ -204,8 +204,8 @@ export default function Dashboard() {
                                   : `${item.fields.confidenceValue}/10`}
                               </AccordionContent>
                             </AccordionItem>
-                            {item.fields.questions.map((q) => {
-                              return q.fields.type === QuestionTypes.CHOICE ? (
+                            {item.fields?.questions?.map((q) => {
+                              return q.fields?.type === QuestionTypes.CHOICE ? (
                                 <AccordionItem key={q.sys.id} value={q.sys.id}>
                                   <AccordionTrigger className="py-2 text-left text-pink-400">
                                     {q.fields.question}

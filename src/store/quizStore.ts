@@ -42,7 +42,7 @@ const useQuizStore = create<State>()((set) => ({
       if (type === "scale") section.fields.confidenceValue = Number(value);
 
       if (type === "checklist") {
-        const checklistIndex = section.fields.questions.findIndex(
+        const checklistIndex = section.fields?.questions?.findIndex(
           ({ fields }) => fields?.type === QuestionTypes.COMPETENCE,
         );
 
@@ -67,7 +67,7 @@ const useQuizStore = create<State>()((set) => ({
       }
 
       if (type === "choice") {
-        const choiceIndex = section.fields.questions.findIndex(
+        const choiceIndex = section.fields?.questions?.findIndex(
           ({ fields }) => fields?.type === QuestionTypes.CHOICE,
         );
 
