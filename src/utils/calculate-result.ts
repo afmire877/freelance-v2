@@ -101,7 +101,7 @@ const calculateScore = (g) => {
       score: compNumber,
       percentage: (compNumber / (g.length * 10)) * 100,
     },
-    improvement: (g[0]?.fields.questions ?? [])
+    improvement: (g[0]?.fields?.questions ?? [])
       .map((q) => {
         if (q.fields?.type === QuestionTypes.COMPETENCE) {
           return q.fields.competenceChecklist

@@ -208,7 +208,7 @@ export default function Dashboard() {
                               return q.fields?.type === QuestionTypes.CHOICE ? (
                                 <AccordionItem key={q.sys.id} value={q.sys.id}>
                                   <AccordionTrigger className="py-2 text-left text-pink-400">
-                                    {q.fields.question}
+                                    {q.fields?.question}
                                     <Badge>{item.fields.subTopic}</Badge>
                                   </AccordionTrigger>
 
@@ -230,7 +230,7 @@ export default function Dashboard() {
                                   value={q?.sys.id}
                                 >
                                   <AccordionTrigger className="py-2 text-left text-pink-400">
-                                    {q.fields.question}{" "}
+                                    {q.fields?.question}{" "}
                                     <Badge>{item.fields.subTopic}</Badge>
                                   </AccordionTrigger>
 
