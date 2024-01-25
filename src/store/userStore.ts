@@ -38,6 +38,7 @@ const useUserStore = create<State>()((set) => ({
     desiredRevenue: "",
     marketingConsent: false,
     isFreelancer: false,
+    acceptedTOS: false,
   },
   setUser: (user) =>
     set((prev) => {
