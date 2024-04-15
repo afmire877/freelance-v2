@@ -1,6 +1,6 @@
 export default function Scale() {
   return (
-    <div className="flex flex-col bg-white px-5">
+    <div className="flex flex-col  px-5">
       <div className="mt-10 flex w-[306px] max-w-full flex-col">
         <div className="flex h-2 w-[23px] flex-col bg-pink-600" />
         <div className="ml-3 text-3xl font-bold leading-[112.5%] text-slate-950 max-md:ml-2.5">

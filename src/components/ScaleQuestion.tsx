@@ -18,7 +18,7 @@ export default function ScaleQuestion({ question, confidenceValue }: Props) {
   );
 
   return (
-    <div className="flex flex-col bg-white font-inter ">
+    <div className="flex flex-col  font-inter ">
       <div className="mt-10 flex w-[306px] max-w-full flex-col md:w-full md:px-2 lg:w-full  ">
         <div className="flex  w-[306px] break-words text-3xl font-medium leading-[112.5%] text-slate-950 max-md:ml-2.5 md:w-full md:text-4xl lg:w-full lg:text-5xl">
           {question}
@@ -27,7 +27,7 @@ export default function ScaleQuestion({ question, confidenceValue }: Props) {
           return (
             <div
               key={idx}
-              className=" ml-3.5 mt-10 flex max-w-full items-baseline gap-5  max-md:ml-2.5 max-md:mt-10"
+              className=" ml-3.5 mt-6 flex max-w-full items-baseline gap-5  max-md:ml-2.5 max-md:mt-10"
             >
               <div className="">
                 <input

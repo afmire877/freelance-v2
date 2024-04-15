@@ -75,3 +75,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+.pattern {
+  background-image: url("/pattern.svg");
+  background-size: 50%;
+  background-repeat: repeat;
+  /* background-position: center; */
+}

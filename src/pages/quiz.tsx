@@ -25,8 +25,10 @@ export default function QuizPage() {
     );
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <Form />
+    <div className="pattern">
+      <div className=" mx-auto max-w-7xl">
+        <Form />
+      </div>
     </div>
   );
 }

@@ -34,7 +34,7 @@ export default function ChecklistQuestion({
           return (
             <div
               key={idx}
-              className=" ml-3.5 mt-10 flex max-w-full items-baseline gap-5  max-md:ml-2.5 max-md:mt-10"
+              className=" ml-3.5 mt-6 flex max-w-full items-baseline gap-5  max-md:ml-2.5 max-md:mt-10"
             >
               <Checkbox
                 id={`checklist-${idx}`}
