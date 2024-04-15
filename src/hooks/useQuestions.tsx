@@ -8,8 +8,6 @@ export const useQuestions = () => {
   const setBank = useQuizStore((s) => s.setBank);
   const bank = useQuizStore((s) => s.bank);
 
-  console.log(response.data);
-
   if (bank.length === 0 && response.data) {
     const bank = response?.data.map((item) => {
       const questions = item?.fields?.questions.map((question) => {

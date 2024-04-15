@@ -5,7 +5,9 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
 import { profiles, submissions } from "~/server/db/schema";
+import { Borough, NewsletterOptions, createBody } from "~/services/submittable";
 import { type User } from "~/store/userStore";
+import base64 from "base-64";
 
 export const submissionRouter = createTRPCRouter({
   create: publicProcedure.input(z.any()).mutation(async ({ input }) => {
@@ -61,5 +63,45 @@ export const submissionRouter = createTRPCRouter({
       }
 
       return found;
+    }),
+
+  saveToSubmittable: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
+        dob: z.string(),
+        phone: z.string(),
+        newsletter: z.nativeEnum(NewsletterOptions),
+        personalData: z.boolean(),
+        borough: z.nativeEnum(Borough),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const url = "https://submittable-api.submittable.com/v4/submissions";
+
+      const projectId = process.env.SUBMITTABLE_PROJECT_ID || "";
+      //   const formId = "2f9a4f81-c86a-464b-9d34-36307dd13f14";
+      const login = process.env.SUBMITTABLE_API_KEY || "";
+      const password = "";
+
+      console.log("input", input);
+      const body = createBody({ ...input, projectId });
+
+      console.log(body);
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${base64.encode(`${login}:${password}`)}`,
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await response.json();
+      console.log("data", data);
+
+      return { status: "ok", data };
     }),
 });

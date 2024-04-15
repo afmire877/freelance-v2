@@ -11,6 +11,8 @@ import LocalChamp from "../assets/localChampions.svg";
 import { Checkbox } from "~/components/ui/checkbox";
 import { useQuestions } from "~/hooks/useQuestions";
 import { useRouter } from "next/router";
+import { Borough, NewsletterOptions } from "~/services/submittable";
+import { api } from "~/utils/api";
 
 export default function Info() {
   const response = useQuestions();
@@ -22,6 +24,7 @@ export default function Info() {
     formState: { errors },
   } = useForm<User>({ mode: "onBlur" });
   const { toast } = useToast();
+  const mutation = api.submission.saveToSubmittable.useMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,6 +51,32 @@ export default function Info() {
     // @ts-ignore
     values.marketingConsent = values?.marketingConsent === "on" ? true : false;
     setUser(values);
+
+    const {
+      borough,
+      contactNumber,
+      email,
+      dateOfBirth: dob,
+      name,
+      marketingConsent,
+      acceptedTOS,
+    } = getValues();
+
+    const BoroughKey = borough.replace(" ", "") as keyof typeof Borough;
+
+    const result = await mutation.mutateAsync({
+      email,
+      borough: Borough[BoroughKey],
+      dob,
+      personalData: !!acceptedTOS,
+      phone: contactNumber,
+      newsletter: !!marketingConsent
+        ? NewsletterOptions.Yes
+        : NewsletterOptions.No,
+      firstName: name.split(" ")[0],
+      lastName: name.split(" ")[1] ?? name.split(" ")[0],
+    });
+    console.log("result", result);
     await router.push("/quiz");
   };
 
