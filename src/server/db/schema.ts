@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 import {
   integer,
@@ -24,6 +24,10 @@ export const submissions = pgTable("submission", {
     onDelete: "cascade",
   }),
   score: json("score").$type<Result[]>().default([]),
+  submittableId: varchar("submittableId").unique().default(""),
+
+  isComplete: boolean("isComplete").default(false),
+  currentQuestionIndex: integer("currentQuestionIndex"),
 
   overallScore: varchar("overallScore").default("0"),
   createdAt: timestamp("created_at")
@@ -61,3 +65,14 @@ export const profiles = pgTable("profiles", {
     .notNull(),
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
+
+// export const profileRelations = relations(profiles, ({ many }) => ({
+//   submissions: many(submissions),
+// }));
+
+// export const submissionsRelations = relations(submissions, ({ one }) => ({
+//   profile: one(profiles, {
+//     fields: [submissions.profileId],
+//     references: [profiles.id],
+//   }),
+// }));

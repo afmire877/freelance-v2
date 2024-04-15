@@ -13,7 +13,7 @@ export default function IncompletePage() {
     <div className="mx-auto my-3 max-w-4xl">
       <h2 className="mb-5">Incomplete</h2>
 
-      {data?.map(({ id }) => <Card key={id} title={id} description={""} />)}
+      {data && <Card key={data?.id} title={data?.id} description={""} />}
     </div>
   );
 }

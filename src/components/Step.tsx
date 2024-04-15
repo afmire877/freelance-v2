@@ -1,8 +1,12 @@
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { type FormEvent } from "react";
 import { QuestionTypes } from "~/model/question";
 import useQuizStore from "~/store/quizStore";
+import useUserStore from "~/store/userStore";
+import { api } from "~/utils/api";
+import { calculateResult } from "~/utils/calculate-result";
 import ArrowLeft from "../assets/arrow-left.svg";
 import ArrowRight from "../assets/arrow-right.svg";
 import ChecklistQuestion from "./ChecklistQuestion";
@@ -10,20 +14,22 @@ import RadioQuestion from "./RadioQuestion";
 import ScaleQuestion from "./ScaleQuestion";
 import { TextBox } from "./TextBox";
 import { Badge } from "./ui/badge";
-import { calculateResult } from "~/utils/calculate-result";
-import { api } from "~/utils/api";
-import useUserStore from "~/store/userStore";
+import { useToast } from "./ui/use-toast";
 
 export default function Step() {
   const router = useRouter();
+  const params = useParams<{ uuid: string }>();
   const user = useUserStore((state) => state.user);
   const setResult = useUserStore((s) => s.setResult);
   const currentIndex = useQuizStore((state) => state.currentIndex);
   const step = useQuizStore((state) => state.step);
   const setStep = useQuizStore((state) => state.setStep);
+  const reset = useQuizStore((state) => state.reset);
   const setCurrentIndex = useQuizStore((state) => state.setCurrentIndex);
   const bank = useQuizStore((state) => state.bank);
   const mutation = api.submission.create.useMutation();
+  const markComplete = api.submission.markComplete.useMutation();
+  const { toast } = useToast();
 
   const isFirst = currentIndex === 0 && step === 0;
 
@@ -49,18 +55,36 @@ export default function Step() {
 
   const handleNextBtn = async (e: FormEvent) => {
     e?.preventDefault();
+    const result = calculateResult(bank);
+    await mutation.mutateAsync({
+      result,
+      user,
+      answers: bank,
+      currentIndex,
+      uuid: params?.uuid,
+    });
     const isLastQuestion = currentIndex === bank?.length - 1;
 
     if (list.length - 1 !== step) return setStep(step + 1);
 
     if (list.length - 1 === step && isLastQuestion) {
-      const result = calculateResult(bank);
-
       if (!result) return;
 
       setResult(result);
 
-      const data = await mutation.mutateAsync({ result, user, answers: bank });
+      const data = await markComplete.mutateAsync({
+        uuid: params?.uuid,
+      });
+      if (!data?.uuid) {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong. Please try again.",
+        });
+        return;
+      }
+
+      reset();
+
       await router.push(`/result/${data?.uuid}`);
       return;
     }

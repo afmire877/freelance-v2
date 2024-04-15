@@ -4,6 +4,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { QuestionTypes, type QuestionGroup } from "~/model/question";
 
 interface State {
+  uuid: string;
+  setUUID: (uuid: string) => void;
   currentIndex: number;
   setCurrentIndex: (currentIndex: number) => void;
   bank: QuestionGroup[];
@@ -16,20 +18,28 @@ interface State {
     value: number | boolean[] | string;
   }) => void;
 
-  questionId: number;
   setBank: (bank: QuestionGroup[]) => void;
-  setQuestionId: (questionId: number) => void;
   step: number;
   setStep: (step: number) => void;
+  reset: () => void;
 }
 
 const useQuizStore = create<State>()(
   persist(
     (set) => ({
+      reset: () => {
+        set({
+          uuid: "",
+          currentIndex: 0,
+          bank: [],
+          step: 0,
+        });
+        return;
+      },
+      uuid: "",
+      setUUID: (uuid: string) => set({ uuid }),
       currentIndex: 0,
       setCurrentIndex: (currentIndex) => set({ currentIndex }),
-      questionId: 1,
-      setQuestionId: (questionId: number) => set({ questionId }),
       bank: [],
       setBank: (bank: QuestionGroup[]) => set({ bank }),
       step: 0,

@@ -18,7 +18,6 @@ export default function ChecklistQuestion({
   const updateQuestionValue = useQuizStore((s) => s.updateQuestionValue);
   const currentIndex = useQuizStore((s) => s.currentIndex);
 
-  console.log({ checklist, question, props });
 
   const [value, setValue] = useState<boolean[]>(
     Array(checklist.length).fill(false),

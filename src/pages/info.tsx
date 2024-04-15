@@ -8,15 +8,14 @@ import useUserStore, { type User } from "~/store/userStore";
 import GGH from "../assets/ggh.svg";
 import LocalChamp from "../assets/localChampions.svg";
 
-import { Checkbox } from "~/components/ui/checkbox";
-import { useQuestions } from "~/hooks/useQuestions";
 import { useRouter } from "next/router";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Borough, NewsletterOptions } from "~/services/submittable";
 import { api } from "~/utils/api";
 
 export default function Info() {
-  const response = useQuestions();
   const setUser = useUserStore((s) => s.setUser);
+  const { email } = useUserStore((s) => s.user);
   const router = useRouter();
   const {
     register,
@@ -24,11 +23,15 @@ export default function Info() {
     formState: { errors },
   } = useForm<User>({ mode: "onBlur" });
   const { toast } = useToast();
-  const mutation = api.submission.saveToSubmittable.useMutation();
+  const submittableMutation = api.submission.saveToSubmittable.useMutation();
+  const createMutation = api.submission.create.useMutation();
+  const { data: incompleteQuiz } = api.submission.getIncomplete.useQuery(
+    { email: email ?? undefined },
+    { enabled: !!email },
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("responseclicknisb");
     if (
       !getValues().name ||
       !getValues().dateOfBirth ||
@@ -64,7 +67,21 @@ export default function Info() {
 
     const BoroughKey = borough.replace(" ", "") as keyof typeof Borough;
 
-    const result = await mutation.mutateAsync({
+    if (incompleteQuiz) {
+      toast({
+        variant: "default",
+        title: "You have an incomplete quiz, redirecting you to it.",
+      });
+
+      await router.push(`/quiz/${incompleteQuiz.uuid}`);
+      return;
+    }
+
+    const [fname, lname] = name.split(" ");
+
+    const firstName = fname ?? "";
+
+    const record = await submittableMutation.mutateAsync({
       email,
       borough: Borough[BoroughKey],
       dob,
@@ -73,11 +90,21 @@ export default function Info() {
       newsletter: !!marketingConsent
         ? NewsletterOptions.Yes
         : NewsletterOptions.No,
-      firstName: name.split(" ")[0],
-      lastName: name.split(" ")[1] ?? name.split(" ")[0],
+      firstName: firstName ?? "",
+      lastName: lname ?? firstName,
     });
-    console.log("result", result);
-    await router.push("/quiz");
+
+    const quiz = await createMutation.mutateAsync({
+      answers: [],
+      result: [],
+      currentQuestionIndex: 0,
+      user: { email: getValues().email },
+      submissionId: record.id,
+    });
+
+    if (!quiz) return;
+
+    await router.push(`/quiz/${quiz.uuid}`);
   };
 
   return (
