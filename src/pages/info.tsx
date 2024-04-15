@@ -15,7 +15,6 @@ import { api } from "~/utils/api";
 
 export default function Info() {
   const setUser = useUserStore((s) => s.setUser);
-  const { email } = useUserStore((s) => s.user);
   const router = useRouter();
   const {
     register,
@@ -25,10 +24,7 @@ export default function Info() {
   const { toast } = useToast();
   const submittableMutation = api.submission.saveToSubmittable.useMutation();
   const createMutation = api.submission.create.useMutation();
-  const { data: incompleteQuiz } = api.submission.getIncomplete.useQuery(
-    { email: email ?? undefined },
-    { enabled: !!email },
-  );
+  const getIncomplete = api.submission.getIncomplete.useMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,6 +62,9 @@ export default function Info() {
     } = getValues();
 
     const BoroughKey = borough.replace(" ", "") as keyof typeof Borough;
+    const incompleteQuiz = await getIncomplete.mutateAsync({
+      email: values.email,
+    });
 
     if (incompleteQuiz) {
       toast({

@@ -52,7 +52,7 @@ export const useQuestions = () => {
       });
       setBank(bank);
     }
-  }, [response.data]);
+  }, [response.data, data?.submission?.currentQuestionIndex]);
 
   return response;
 };

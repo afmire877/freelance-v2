@@ -146,7 +146,7 @@ export const submissionRouter = createTRPCRouter({
 
   getIncomplete: publicProcedure
     .input(z.object({ email: z.string() }))
-    .query(async ({ input: { email } }) => {
+    .mutation(async ({ input: { email } }) => {
       const [found] = await db
         .select()
         .from(profiles)

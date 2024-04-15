@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 import {
   integer,
@@ -65,14 +65,3 @@ export const profiles = pgTable("profiles", {
     .notNull(),
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
-
-// export const profileRelations = relations(profiles, ({ many }) => ({
-//   submissions: many(submissions),
-// }));
-
-// export const submissionsRelations = relations(submissions, ({ one }) => ({
-//   profile: one(profiles, {
-//     fields: [submissions.profileId],
-//     references: [profiles.id],
-//   }),
-// }));
