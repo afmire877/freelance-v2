@@ -97,7 +97,7 @@ export default function Info() {
       answers: [],
       result: [],
       currentQuestionIndex: 0,
-      user: { email: getValues().email },
+      user: getValues(),
       submissionId: record.id,
     });
 
