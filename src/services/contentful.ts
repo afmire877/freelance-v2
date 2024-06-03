@@ -34,3 +34,7 @@ export const getQuestions = async () => {
 
   return questions.fields.questions as unknown as QuestionGroup[];
 };
+
+export function isDraft(entity) {
+  return !entity.sys.publishedVersion;
+}

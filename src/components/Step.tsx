@@ -15,6 +15,7 @@ import ScaleQuestion from "./ScaleQuestion";
 import { TextBox } from "./TextBox";
 import { Badge } from "./ui/badge";
 import { useToast } from "./ui/use-toast";
+import { isDraft } from "~/services/contentful";
 
 export default function Step() {
   const router = useRouter();
@@ -47,10 +48,12 @@ export default function Step() {
       question: confidenceQuestion,
       confidenceValue,
     },
-    ...(questions?.map((item) => ({
-      type: item.fields?.type,
-      ...item.fields,
-    })) ?? []),
+    ...(questions
+      ?.filter((item) => !isDraft(item))
+      .map((item) => ({
+        type: item.fields?.type,
+        ...item.fields,
+      })) ?? []),
   ];
 
   const handleNextBtn = async (e: FormEvent) => {
