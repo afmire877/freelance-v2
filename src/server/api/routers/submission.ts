@@ -147,25 +147,30 @@ export const submissionRouter = createTRPCRouter({
   getIncomplete: publicProcedure
     .input(z.object({ email: z.string() }))
     .mutation(async ({ input: { email } }) => {
-      const [found] = await db
-        .select()
-        .from(profiles)
-        .where(eq(profiles.email, email))
-        .execute();
+      try {
+        const [found] = await db
+          .select()
+          .from(profiles)
+          .where(eq(profiles.email, email))
+          .execute();
 
-      if (!found) return null;
+        if (!found) return null;
 
-      const [submission] = await db
-        .select()
-        .from(submissions)
-        .where(
-          and(
-            eq(submissions.profileId, found.id),
-            eq(submissions.isComplete, false),
-          ),
-        )
-        .execute();
+        const [submission] = await db
+          .select()
+          .from(submissions)
+          .where(
+            and(
+              eq(submissions.profileId, found.id),
+              eq(submissions.isComplete, false),
+            ),
+          )
+          .execute();
 
-      return submission;
+        return submission;
+      } catch (e: unknown) {
+        console.error((e as Error).message);
+        return null;
+      }
     }),
 });
