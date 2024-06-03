@@ -153,13 +153,7 @@ export const submissionRouter = createTRPCRouter({
         .where(eq(profiles.email, email))
         .execute();
 
-      if (!found) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Profile not found",
-          cause: new Error("Profile not found"),
-        });
-      }
+      if (!found) return null;
 
       const [submission] = await db
         .select()
