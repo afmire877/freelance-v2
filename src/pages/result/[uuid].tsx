@@ -9,7 +9,7 @@ import {
   RadialLinearScale,
   Tooltip,
 } from "chart.js";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Chart from "~/components/Chart";
 import { TopicScore } from "~/components/topic-score/topic-score";
 import { useQuestions } from "~/hooks/useQuestions";
@@ -29,11 +29,12 @@ ChartJS.register(
 export default function Result() {
   const setResult = useUserStore((s) => s.setResult);
   const params = useParams<{ uuid: string }>();
-  const { data } = api.submission.get.useQuery(
+  const { data, error } = api.submission.get.useQuery(
     { uuid: params?.uuid },
     { enabled: Boolean(params?.uuid) },
   );
-  const _ = useQuestions();
+
+  const { error: errorQuestion } = useQuestions();
   const [chartData, setChartData] = useState({
     confidence: [0, 0, 0, 0, 0, 0],
     competence: [0, 0, 0, 0, 0, 0],
@@ -66,6 +67,8 @@ export default function Result() {
       ],
     });
   }, [result]);
+
+  if (error || errorQuestion) return notFound();
 
   return (
     <div className="mx-auto max-w-7xl  font-inter  ">

@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { type QuestionGroup, QuestionTypes } from "~/model/question";
+import { QuestionTypes, type QuestionGroup } from "~/model/question";
 import { getQuestions } from "~/services/contentful";
 import useQuizStore from "~/store/quizStore";
-import useUserStore from "~/store/userStore";
 import { api } from "~/utils/api";
 
 export const useQuestions = () => {
@@ -20,15 +19,25 @@ export const useQuestions = () => {
   );
 
   useEffect(() => {
+    console.log(data, error);
+    if (error) void router.push("/404");
+  }, [error]);
+
+  useEffect(() => {
     const answers = data?.submission?.answers as QuestionGroup[];
     const isComplete = data?.submission?.isComplete;
-    if (!isComplete && answers?.length !== 0 && !error) {
+    console.log(
+      "answers",
+      answers,
+      !isComplete && answers?.length !== 0 && !error,
+    );
+    if (!isComplete && answers && answers?.length !== 0 && !error) {
       const index = data?.submission?.currentQuestionIndex ?? 0;
       console.log("useQuestions -> index", index);
       setBank(answers);
       setCurrentIndex(index);
       return;
-    } else if (bank.length === 0 && response.data) {
+    } else if (bank?.length === 0 && response.data) {
       const bank = response?.data.map((item) => {
         const questions = item?.fields?.questions.map((question) => {
           if (question?.fields?.type !== QuestionTypes.CHOICE) return question;

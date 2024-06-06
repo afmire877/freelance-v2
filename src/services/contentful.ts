@@ -26,13 +26,15 @@ if (typeof window !== "undefined") {
 }
 
 export const getQuestions = async () => {
-  const questions = await client?.getEntry("3aDWPrYSc94kS8WKNm3b2z", {
+  const list = await client?.getEntry("3aDWPrYSc94kS8WKNm3b2z", {
     include: 4,
   });
 
-  if (questions === undefined) throw new Error("Questions not found");
+  if (!list) throw new Error("Questions not found");
 
-  return questions.fields.questions as unknown as QuestionGroup[];
+  const bank = list.fields.questions?.filter((t) => t.fields?.questions);
+
+  return bank as unknown as QuestionGroup[];
 };
 
 export function isDraft(entity) {

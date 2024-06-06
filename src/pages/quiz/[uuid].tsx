@@ -1,13 +1,10 @@
-import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Form } from "~/components/Form";
 import Spinner from "~/components/Spinner";
-import { useQuestions } from "~/hooks/useQuestions";
 import useUserStore from "~/store/userStore";
 
 export default function QuizPage() {
-  useQuestions();
   const user = useUserStore((s) => s.user);
   const router = useRouter();
 

@@ -17,7 +17,7 @@ import {
   RadialLinearScale,
   Tooltip,
 } from "chart.js";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { groupWith } from "ramda";
 import Chart from "~/components/Chart";
@@ -98,7 +98,7 @@ export default function Dashboard() {
 
   if (isLoading) return <Spinner />;
 
-  if (error) return router.push("/404");
+  if (error) return notFound();
 
   return (
     <div className="mx-auto max-w-md  font-inter md:max-w-full">

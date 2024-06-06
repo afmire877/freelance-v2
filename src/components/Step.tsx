@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { type FormEvent } from "react";
 import { QuestionTypes } from "~/model/question";
@@ -83,7 +83,8 @@ export default function Step() {
           variant: "destructive",
           title: "Something went wrong. Please try again.",
         });
-        return;
+
+        return notFound();
       }
 
       reset();

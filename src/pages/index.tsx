@@ -1,9 +1,13 @@
 import Head from "next/head";
+import { notFound } from "next/navigation";
 import Intro from "~/components/intro";
 import { useQuestions } from "~/hooks/useQuestions";
 
 export default function Home() {
-  const _ = useQuestions();
+  const { error } = useQuestions();
+
+  if (error) notFound();
+
   return (
     <>
       <Head>
