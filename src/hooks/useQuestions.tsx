@@ -22,7 +22,7 @@ export const useQuestions = () => {
   useEffect(() => {
     const answers = data?.submission?.answers as QuestionGroup[];
     const isComplete = data?.submission?.isComplete;
-    if (!isComplete && answers && !error) {
+    if (!isComplete && answers?.length !== 0 && !error) {
       const index = data?.submission?.currentQuestionIndex ?? 0;
       console.log("useQuestions -> index", index);
       setBank(answers);
