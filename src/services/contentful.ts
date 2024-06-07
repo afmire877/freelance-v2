@@ -32,6 +32,8 @@ export const getQuestions = async () => {
 
   if (!list) throw new Error("Questions not found");
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const bank = list.fields.questions?.filter((t) => t.fields?.questions);
 
   return bank as unknown as QuestionGroup[];
