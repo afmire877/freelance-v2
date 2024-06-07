@@ -33,11 +33,10 @@ export const useQuestions = () => {
     );
     if (!isComplete && answers && answers?.length !== 0 && !error) {
       const index = data?.submission?.currentQuestionIndex ?? 0;
-      console.log("useQuestions -> index", index);
-      setBank(answers);
+      setBank(answers ?? []);
       setCurrentIndex(index);
       return;
-    } else if (bank?.length === 0 && response.data) {
+    } else if (bank && bank?.length === 0 && response.data) {
       const bank = response?.data.map((item) => {
         const questions = item?.fields?.questions.map((question) => {
           if (question?.fields?.type !== QuestionTypes.CHOICE) return question;
