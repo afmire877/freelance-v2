@@ -26,17 +26,15 @@ export const useQuestions = () => {
   useEffect(() => {
     const answers = data?.submission?.answers as QuestionGroup[];
     const isComplete = data?.submission?.isComplete;
-    console.log(
-      "answers",
-      answers,
-      !isComplete && answers?.length !== 0 && !error,
-    );
+
     if (!isComplete && answers && answers?.length !== 0 && !error) {
       const index = data?.submission?.currentQuestionIndex ?? 0;
       setBank(answers ?? []);
       setCurrentIndex(index);
       return;
-    } else if (bank && bank?.length === 0 && response.data) {
+    }
+
+    if (bank && bank?.length === 0 && response.data) {
       const bank = response?.data.map((item) => {
         const questions = item?.fields?.questions.map((question) => {
           if (question?.fields?.type !== QuestionTypes.CHOICE) return question;
@@ -59,6 +57,8 @@ export const useQuestions = () => {
         };
       });
       setBank(bank);
+
+      return;
     }
   }, [response.data, data?.submission?.currentQuestionIndex]);
 
