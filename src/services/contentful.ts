@@ -34,7 +34,9 @@ export const getQuestions = async () => {
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
-  const bank = list.fields.questions?.filter((t) => t.fields?.question);
+  const bank = list.fields.questions?.filter(
+    (t) => t.fields?.questions.length > 0,
+  );
 
   console.log("bank", bank);
 
