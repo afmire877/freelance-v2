@@ -36,6 +36,8 @@ export const getQuestions = async () => {
   // @ts-expect-error
   const bank = list.fields.questions?.filter((t) => t.fields?.question);
 
+  console.log("bank", bank);
+
   return bank as unknown as QuestionGroup[];
 };
 

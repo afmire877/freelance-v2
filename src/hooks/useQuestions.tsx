@@ -19,7 +19,6 @@ export const useQuestions = () => {
   );
 
   useEffect(() => {
-    console.log(data, error);
     if (error) void router.push("/404");
   }, [error]);
 
@@ -41,10 +40,7 @@ export const useQuestions = () => {
 
           return {
             ...question,
-            fields: {
-              ...question.fields,
-              choiceQuestionValue: "",
-            },
+            fields: { ...question.fields, choiceQuestionValue: "" },
           };
         });
         return {
