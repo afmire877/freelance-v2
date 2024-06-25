@@ -48,7 +48,7 @@ export default function Step() {
       question: confidenceQuestion,
       confidenceValue,
     },
-    ...(questions.fields.questions
+    ...(questions
       .filter((q) => q.fields)
       .map((item) => ({
         type: item.fields?.type,
