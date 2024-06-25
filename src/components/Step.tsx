@@ -48,10 +48,12 @@ export default function Step() {
       question: confidenceQuestion,
       confidenceValue,
     },
-    ...(questions.map((item) => ({
-      type: item.fields?.type,
-      ...item.fields,
-    })) ?? []),
+    ...(questions.fields.questions
+      .filter((q) => q.fields)
+      .map((item) => ({
+        type: item.fields?.type,
+        ...item.fields,
+      })) ?? []),
   ];
 
   const handleNextBtn = async (e: FormEvent) => {
