@@ -72,14 +72,8 @@ export default function Result() {
 
   return (
     <div className="mx-auto max-w-7xl  font-inter  ">
-      <div className="p-8 ">
-        <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
-          <span className="text-black">Hello </span>
-          <span className="text-pink-600">{user?.name}, </span>
-          <span className="text-black">
-            here are a snapshot of Quiz results:
-          </span>
-        </div>
+      <div className="w-full self-center whitespace-nowrap p-4 text-center text-3xl font-medium text-black  md:mx-6  md:my-10 md:pt-12 lg:text-5xl ">
+        Freelance Quiz Result{" "}
       </div>
       <div className=" md:flex">
         <div className="flex flex-col md:mx-10 md:shrink-0 md:py-20">
@@ -117,6 +111,15 @@ export default function Result() {
         </div>
 
         <div className="my-20 w-full">
+          <div className="">
+            <div className=" mt-6 text-3xl leading-8 text-black md:pb-4">
+              <span className="text-black">Hello </span>
+              <span className="text-pink-600">{user?.name}, </span>
+              <span className="text-black">
+                here are a snapshot of Quiz results:
+              </span>
+            </div>
+          </div>
           <p className="my-10 w-full text-3xl ">Summary of Results:</p>
           <TopicScore />
         </div>
