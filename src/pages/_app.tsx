@@ -8,6 +8,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@/components/ui/toaster";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import LogRocket from "logrocket";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +34,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       persister: sessionStoragePersister,
     });
   }
+
+  useEffect(() => {
+    LogRocket.init("dolg54/ggh-freelance");
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
