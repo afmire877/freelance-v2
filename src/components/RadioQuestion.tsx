@@ -45,15 +45,18 @@ export default function RadioQuestion({
           });
         }}
       >
-        {checklist?.map(({ fields: { text, selected } }, index) => {
+        {checklist?.map((item, index) => {
           return (
             <div key={index} className=" flex items-baseline space-x-2">
-              <RadioGroupItem defaultChecked={selected} value={`${index}`} />
+              <RadioGroupItem
+                defaultChecked={item?.fields?.selected}
+                value={`${index}`}
+              />
               <Label
                 htmlFor={`${index}`}
                 className="whitespace-normal  text-lg font-normal leading-normal text-black hover:border-b-2 hover:border-pink-600 lg:text-2xl"
               >
-                {text}
+                {item?.fields?.text}
               </Label>
             </div>
           );
