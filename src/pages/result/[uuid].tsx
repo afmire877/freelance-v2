@@ -41,6 +41,7 @@ export default function Result() {
   });
 
   useEffect(() => {
+    if (!data) return;
     setResult(data?.submission.score as unknown as Result[]);
   }, [data?.profiles, data?.submission.score, setResult]);
 
@@ -48,6 +49,7 @@ export default function Result() {
   const user = data?.profiles;
 
   useEffect(() => {
+    if (!result) return;
     setChartData({
       confidence: [
         resultByTopic(result, "Sales", "confidence"),
