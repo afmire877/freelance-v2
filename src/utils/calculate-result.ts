@@ -1,4 +1,4 @@
-import R, { groupWith, sum } from "ramda";
+import { groupWith, sum, sortBy, path } from "ramda";
 import { type QuestionGroup, QuestionTypes } from "~/model/question";
 
 export type Result = {
@@ -15,7 +15,7 @@ export type Result = {
     competence: { score: number; percentage: number };
   };
 };
-const sortByTopic = R.sortBy(R.path(["fields", "topic"]));
+const sortByTopic = sortBy(path(["fields", "topic"]));
 export const calculateResult = (b: QuestionGroup[]) => {
   if (!b) return;
 
