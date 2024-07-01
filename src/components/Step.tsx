@@ -59,7 +59,7 @@ export default function Step() {
   const handleNextBtn = async (e: FormEvent) => {
     e?.preventDefault();
     const result = calculateResult(bank);
-    mutation.mutateAsync({
+    mutation.mutate({
       result,
       user,
       answers: bank,
