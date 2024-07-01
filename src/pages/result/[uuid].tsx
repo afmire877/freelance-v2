@@ -29,7 +29,10 @@ ChartJS.register(
 export default function Result() {
   const setResult = useUserStore((s) => s.setResult);
   const params = useParams<{ uuid: string }>();
-  const { data, error } = api.submission.get.useQuery({ uuid: params?.uuid });
+  const { data, error } = api.submission.get.useQuery(
+    { uuid: params?.uuid },
+    { enabled: Boolean(params?.uuid) },
+  );
 
   const { error: errorQuestion } = useQuestions();
   const [chartData, setChartData] = useState({
