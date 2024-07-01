@@ -72,7 +72,9 @@ export default function Result() {
   }, [result]);
 
   useEffect(() => {
-    refetch();
+    (async () => {
+      await refetch();
+    })();
   }, [params?.uuid]);
 
   if (!isLoading) {
