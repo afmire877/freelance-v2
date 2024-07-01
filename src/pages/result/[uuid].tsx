@@ -75,7 +75,7 @@ export default function Result() {
     refetch().catch(console.error);
   }, [params?.uuid]);
 
-  if (!isLoading) {
+  if (isLoading) {
     return (
       <div className="flex h-screen max-w-7xl items-center justify-center text-center text-4xl">
         <div>
