@@ -16,6 +16,7 @@ import { useQuestions } from "~/hooks/useQuestions";
 import useUserStore from "~/store/userStore";
 import { api } from "~/utils/api";
 import { resultByTopic, type Result } from "~/utils/calculate-result";
+import Spinner from "~/components/Spinner";
 
 ChartJS.register(
   RadialLinearScale,
@@ -69,6 +70,16 @@ export default function Result() {
       ],
     });
   }, [result]);
+
+  if (!data) {
+    return (
+      <div className="flex h-screen max-w-7xl items-center justify-center text-center text-4xl">
+        <div>
+          <Spinner label="Loading...." />
+        </div>
+      </div>
+    );
+  }
 
   if (error || errorQuestion) return notFound();
 
