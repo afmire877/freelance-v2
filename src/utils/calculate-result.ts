@@ -1,4 +1,4 @@
-import { groupWith, sum } from "ramda";
+import R, { groupWith, sum } from "ramda";
 import { type QuestionGroup, QuestionTypes } from "~/model/question";
 
 export type Result = {
@@ -15,11 +15,13 @@ export type Result = {
     competence: { score: number; percentage: number };
   };
 };
-
+const sortByTopic = R.sortBy(R.path(["fields", "topic"]));
 export const calculateResult = (b: QuestionGroup[]) => {
   if (!b) return;
 
-  const bank = removeFields(b as unknown as Record<string, unknown>);
+  const bank = sortByTopic(
+    removeFields(b as unknown as Record<string, unknown>),
+  );
 
   const groupedSubTopic = groupWith(
     (a, b) => a.fields.subTopic === b.fields.subTopic,
