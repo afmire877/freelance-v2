@@ -30,7 +30,7 @@ ChartJS.register(
 export default function Result() {
   const setResult = useUserStore((s) => s.setResult);
   const params = useParams<{ uuid: string }>();
-  const { data, error } = api.submission.get.useQuery(
+  const { data, error, isLoading, refetch } = api.submission.get.useQuery(
     { uuid: params?.uuid },
     { enabled: Boolean(params?.uuid) },
   );
@@ -71,7 +71,11 @@ export default function Result() {
     });
   }, [result]);
 
-  if (!data) {
+  useEffect(() => {
+    refetch();
+  }, [params?.uuid]);
+
+  if (!isLoading) {
     return (
       <div className="flex h-screen max-w-7xl items-center justify-center text-center text-4xl">
         <div>
